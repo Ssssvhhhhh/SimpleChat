@@ -16,8 +16,16 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void opencloseTab();
+    void openServerCreationSettings();
+
+private slots:
+    void on_pushButtonOpenCloseTab_clicked();
+    void on_pushButtonAddServer_clicked();
+    void on_pushButtonBack_clicked();
 
 private:
     Ui::MainWindow *ui;
+    bool isTabVisible = true;
 };
 #endif // MAINWINDOW_H
