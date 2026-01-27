@@ -39,7 +39,7 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidgetTab">
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="pageServers">
           <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -62,6 +62,13 @@
           <layout class="QVBoxLayout" name="verticalLayout_9">
            <item>
             <widget class="QTreeView" name="treeViewUsers"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButtonBack_2">
+             <property name="text">
+              <string>Back</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
