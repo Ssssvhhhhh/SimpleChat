@@ -37,16 +37,34 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QTableWidget" name="tableWidgetServers"/>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButtonAddServer">
-         <property name="text">
-          <string>Add</string>
+        <widget class="QStackedWidget" name="stackedWidgetTab">
+         <property name="currentIndex">
+          <number>0</number>
          </property>
-         <property name="icon">
-          <iconset theme="QIcon::ThemeIcon::ListAdd"/>
-         </property>
+         <widget class="QWidget" name="pageServers">
+          <layout class="QVBoxLayout" name="verticalLayout_8">
+           <item>
+            <widget class="QTableWidget" name="tableWidgetServers"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButtonAddServer">
+             <property name="text">
+              <string>Add</string>
+             </property>
+             <property name="icon">
+              <iconset theme="QIcon::ThemeIcon::ListAdd"/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="pageUsersOnServer">
+          <layout class="QVBoxLayout" name="verticalLayout_9">
+           <item>
+            <widget class="QTreeView" name="treeViewUsers"/>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
       </layout>
