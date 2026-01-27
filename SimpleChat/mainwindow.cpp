@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(userSocket, &QTcpSocket::readyRead, this, &MainWindow::readServerResponse);
     //!userSocket->waitForConnected(3000) ? qDebug() << "[CLIENT] " << "Connection error": qDebug() << "[CLIENT] " << "Connection Succses";
-
+    connect(userSocket, &QTcpSocket::connected, this, &MainWindow::openCloseServerUsers);
     ui->tableWidgetServers->setColumnCount(1);
     ui->tableWidgetServers->setColumnWidth(0, 160);
     ui->tableWidgetServers->verticalHeader()->hide();
@@ -41,6 +41,11 @@ void MainWindow::opencloseTab()
 void MainWindow::openServerCreationSettings()
 {
     ui->stackedWidget->setCurrentIndex(1);
+}
+
+void MainWindow::openCloseServerUsers()
+{
+    ui->stackedWidgetTab->setCurrentIndex(1);
 }
 
 void MainWindow::readServerResponse()
@@ -110,5 +115,11 @@ void MainWindow::on_pushButtonSend_clicked()
 void MainWindow::on_pushButton_clicked()
 {
     addServer();
+}
+
+
+void MainWindow::on_pushButtonBack_2_clicked()
+{
+    ui->stackedWidgetTab->setCurrentIndex(0);
 }
 

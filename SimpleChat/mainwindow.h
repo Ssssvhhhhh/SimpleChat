@@ -22,6 +22,8 @@ public:
 
     void opencloseTab();
     void openServerCreationSettings();
+    void openCloseServerUsers();
+
 
     void readServerResponse();
     void sendDataToServer();
@@ -33,6 +35,8 @@ private slots:
     void on_pushButtonBack_clicked();
     void on_pushButtonSend_clicked();
     void on_pushButton_clicked();
+
+    void on_pushButtonBack_2_clicked();
 
 private:
     Ui::MainWindow *ui;
