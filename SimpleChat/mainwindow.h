@@ -1,7 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "customwidget.h"
+
 #include <QMainWindow>
+#include <QTcpSocket>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -16,16 +19,26 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
     void opencloseTab();
     void openServerCreationSettings();
+
+    void readServerResponse();
+    void sendDataToServer();
+    void addServer();
 
 private slots:
     void on_pushButtonOpenCloseTab_clicked();
     void on_pushButtonAddServer_clicked();
     void on_pushButtonBack_clicked();
+    void on_pushButtonSend_clicked();
+    void on_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;
     bool isTabVisible = true;
+    QTcpSocket* userSocket;
+    CustomWidget* serverWidget;
+
 };
 #endif // MAINWINDOW_H

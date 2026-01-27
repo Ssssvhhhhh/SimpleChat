@@ -9,11 +9,17 @@ class Server : public QTcpServer
 {
     Q_OBJECT
 public:
-    explicit Server(QObject *parent = nullptr);
+    Server(QObject *parent, int port);
     void incomingConnection(qintptr socketDescriptor) override;
     void readClientData();
+    void meesageToUser(QTcpSocket* userSocketMessage);
+    void userDisconected();
+
+    void broadcastMessage(QTcpSocket* sender, const QString& message);
 private:
-    QSet<QTcpSocket*> userSockets;
+    //QSet<QTcpSocket*> userSockets;
+    QMap<QTcpSocket*, QString> userSocketsAndName;
+
 
 };
 
