@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "server.h"
+#include "userdatabase.h"
 
 #include <QApplication>
 
@@ -12,6 +13,14 @@ int main(int argc, char *argv[])
     MainWindow w;
 
 
+    UserDataBase Base;
+    UserDataBase::userData Data;
+    Data.login = "asd";
+    Data.email = "asd";
+    Data.name = "asd";
+    Data.sername = "asd";
+    Data.password = "asd";
+    Base.addUserInDataBase(Data);
 
     w.show();
 
