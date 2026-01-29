@@ -37,41 +37,16 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QStackedWidget" name="stackedWidgetTab">
-         <property name="currentIndex">
-          <number>0</number>
+        <widget class="QTreeWidget" name="treeWidget"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButtonAddServer">
+         <property name="text">
+          <string>Add</string>
          </property>
-         <widget class="QWidget" name="pageServers">
-          <layout class="QVBoxLayout" name="verticalLayout_8">
-           <item>
-            <widget class="QTableWidget" name="tableWidgetServers"/>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButtonAddServer">
-             <property name="text">
-              <string>Add</string>
-             </property>
-             <property name="icon">
-              <iconset theme="QIcon::ThemeIcon::ListAdd"/>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="pageUsersOnServer">
-          <layout class="QVBoxLayout" name="verticalLayout_9">
-           <item>
-            <widget class="QTreeView" name="treeViewUsers"/>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButtonBack_2">
-             <property name="text">
-              <string>Back</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
+         <property name="icon">
+          <iconset theme="QIcon::ThemeIcon::ListAdd"/>
+         </property>
         </widget>
        </item>
       </layout>
@@ -250,7 +225,7 @@
             <string>Authorization</string>
            </property>
           </widget>
-          <widget class="QWidget" name="">
+          <widget class="QWidget" name="layoutWidget">
            <property name="geometry">
             <rect>
              <x>130</x>

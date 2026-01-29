@@ -7,7 +7,11 @@
 #include <QSqlDataBase>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QSqlRecord>
 
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonDocument>
 
 
 class UserDataBase
@@ -24,7 +28,9 @@ public:
     };
 
     void addUserInDataBase(userData data);
+    QByteArray userNameSernameForSending();
     bool auntificate(const QString& login , const QString& password);
+
 
 private:
     QSqlDatabase usersBase;

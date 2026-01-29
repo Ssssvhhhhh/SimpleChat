@@ -42,6 +42,31 @@ void UserDataBase::addUserInDataBase(userData data)
     }
 }
 
+QByteArray UserDataBase::userNameSernameForSending()
+{
+    QSqlQuery userDataQuery(usersBase);
+
+    userDataQuery.prepare("SELECT name, sername FROM UserBase");
+    if (!userDataQuery.exec())
+    {
+        qDebug() << "[DataBase] user name and sername selected error: " << userDataQuery.lastError().text();
+    }
+
+    QJsonArray userDataJson;
+    while (userDataQuery.next())
+    {
+        QJsonObject objectUserData;
+        objectUserData["full_name"] = userDataQuery.value("name").toString() + " " + userDataQuery.value("sername").toString();
+
+        userDataJson.append(objectUserData);
+    }
+    QJsonDocument usersDataJsonDoc(userDataJson);
+    qDebug() << "[DataBase]" << "users" << usersDataJsonDoc;
+
+    return usersDataJsonDoc.toJson();
+
+}
+
 bool UserDataBase::auntificate(const QString &login, const QString &password)
 {
     QSqlQuery authenticateQuery(usersBase);

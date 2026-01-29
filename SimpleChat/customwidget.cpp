@@ -29,13 +29,10 @@ void CustomWidget::connectToCurrentServer(QTcpSocket* userSocket)
     !userSocket->waitForConnected(3000) ? qDebug() << "[CLIENT] " << "Connection error": qDebug() << "[CLIENT] " << "Connection Succses";
 }
 
-
-
 CustomWidget::~CustomWidget()
 {
     delete ui;
 }
-
 
 void CustomWidget::on_pushButtonConnect_clicked()
 {

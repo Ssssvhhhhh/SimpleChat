@@ -18,6 +18,7 @@ public:
     void readClientData();
     void meesageToUser(QTcpSocket* userSocketMessage);
     void sendAuthMessage(QTcpSocket* userAutSocket, bool isAauthenticated);
+    void sendUserFullName(QTcpSocket* userFullNameSocket); // поменять название сокета
     void userDisconected();
     void broadcastMessage(QTcpSocket* sender, const QString& message);
 

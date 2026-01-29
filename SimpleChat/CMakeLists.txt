@@ -28,6 +28,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         customwidget.h customwidget.cpp customwidget.ui
         server.h server.cpp
         userdatabase.h userdatabase.cpp
+        userstatuswidget.h userstatuswidget.cpp userstatuswidget.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET SimpleChat APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

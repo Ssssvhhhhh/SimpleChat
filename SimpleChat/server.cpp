@@ -60,6 +60,7 @@ void Server::readClientData()
         {
             sendAuthMessage(userSenderSocket, true);
             authorizedUsers[userSenderSocket] = splitetedUserData[1];
+            sendUserFullName(userSenderSocket);
         }
         else
         {
@@ -92,5 +93,12 @@ void Server::sendAuthMessage(QTcpSocket* userAutSocket, bool isAauthenticated)
         userAutSocket->flush();
 
     }
+}
+
+void Server::sendUserFullName(QTcpSocket* userFullNameSocket)
+{
+    QString fullNameIdentifier = "|FullName|";
+    userFullNameSocket->write(fullNameIdentifier.toUtf8() + UserBase->userNameSernameForSending());
+    userFullNameSocket->flush();
 }
 

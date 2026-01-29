@@ -12,12 +12,14 @@ MainWindow::MainWindow(QWidget *parent)
     connect(userSocket, &QTcpSocket::readyRead, this, &MainWindow::readServerResponse);
     //!userSocket->waitForConnected(3000) ? qDebug() << "[CLIENT] " << "Connection error": qDebug() << "[CLIENT] " << "Connection Succses";
     connect(userSocket, &QTcpSocket::connected, this, &MainWindow::openCloseServerUsers);
+    /*
     ui->tableWidgetServers->setColumnCount(1);
     ui->tableWidgetServers->setColumnWidth(0, 160);
     ui->tableWidgetServers->verticalHeader()->hide();
     ui->tableWidgetServers->horizontalHeader()->hide();
-
-
+    */
+    ui->treeWidget->setColumnCount(1);
+    ui->treeWidget->setHeaderHidden(true);
 }
 
 MainWindow::~MainWindow()
@@ -46,7 +48,7 @@ void MainWindow::openServerCreationSettings()
 
 void MainWindow::openCloseServerUsers()
 {
-    ui->stackedWidgetTab->setCurrentIndex(1);
+    //ui->stackedWidgetTab->setCurrentIndex(1);
 }
 
 void MainWindow::readServerResponse()
@@ -60,7 +62,7 @@ void MainWindow::readServerResponse()
         if(splitedDataFromServer[1] == "Success")
         {
             ui->stackedWidget->setCurrentIndex(0);
-            ui->stackedWidgetTab->setCurrentIndex(1);
+            addUserFullNameInTab(splitedDataFromServer[3]);
         }
     }
 
@@ -80,9 +82,15 @@ void MainWindow::addServer()
     QString serverPort = ui->lineEditServerPort->text();
 
 
+    serverItem = new QTreeWidgetItem(ui->treeWidget);
+    serverWidget = new CustomWidget(nullptr, userSocket, serverName,serverIP,serverPort.toInt());
+    ui->treeWidget->setItemWidget(serverItem, 0, serverWidget);
+
+    /*
     int row = ui->tableWidgetServers->rowCount();
     ui->tableWidgetServers->insertRow(row);
     ui->tableWidgetServers->setRowHeight(row, 50);
+
 
     QWidget* cellWidget = new QWidget(ui->tableWidgetServers);
     QHBoxLayout* layout = new QHBoxLayout(cellWidget);
@@ -93,6 +101,7 @@ void MainWindow::addServer()
     layout->addWidget(serverWidget);
 
     ui->tableWidgetServers->setCellWidget(row, 0, cellWidget);
+    */
 
 }
 
@@ -105,6 +114,23 @@ void MainWindow::sendAuthorizationData()
 
     userSocket->write(authorizationData.toUtf8());
     userSocket->flush();
+}
+
+void MainWindow::addUserFullNameInTab(const QString& usersFullName)
+{
+    QJsonDocument usersNameDoc = QJsonDocument::fromJson(usersFullName.toUtf8());
+    QJsonArray usersNameArray = usersNameDoc.array();
+
+    for(const QJsonValue& value : usersNameArray)
+    {
+        QJsonObject usersNameObj = value.toObject();
+        QString fullName = usersNameObj["full_name"].toString();
+
+        QTreeWidgetItem* userNameItem = new QTreeWidgetItem(serverItem);
+        userWidget = new UserStatusWidget(nullptr, fullName);
+        ui->treeWidget->setItemWidget(userNameItem,0,userWidget);
+        qDebug() << "[Client] " << fullName;
+    }
 }
 
 
@@ -137,11 +163,6 @@ void MainWindow::on_pushButton_clicked()
     addServer();
 }
 
-
-void MainWindow::on_pushButtonBack_2_clicked()
-{
-    ui->stackedWidgetTab->setCurrentIndex(0);
-}
 
 
 void MainWindow::on_pushButtonAuthorization_clicked()
