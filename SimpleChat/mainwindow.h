@@ -29,20 +29,24 @@ public:
     void sendDataToServer();
     void addServer();
 
+    void sendAuthorizationData();
+
 private slots:
     void on_pushButtonOpenCloseTab_clicked();
     void on_pushButtonAddServer_clicked();
     void on_pushButtonBack_clicked();
     void on_pushButtonSend_clicked();
     void on_pushButton_clicked();
-
     void on_pushButtonBack_2_clicked();
+
+    void on_pushButtonAuthorization_clicked();
 
 private:
     Ui::MainWindow *ui;
     bool isTabVisible = true;
     QTcpSocket* userSocket;
     CustomWidget* serverWidget;
+    bool isAuthorized = false;
 
 };
 #endif // MAINWINDOW_H

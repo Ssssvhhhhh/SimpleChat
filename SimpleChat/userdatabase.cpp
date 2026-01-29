@@ -19,7 +19,6 @@ UserDataBase::UserDataBase()
 void UserDataBase::addUserInDataBase(userData data)
 {
 
-
     QSqlQuery addQuery(usersBase);
 
     addQuery.prepare(
@@ -41,4 +40,34 @@ void UserDataBase::addUserInDataBase(userData data)
     {
         qDebug() << "[DataBase] user added OK";
     }
+}
+
+bool UserDataBase::auntificate(const QString &login, const QString &password)
+{
+    QSqlQuery authenticateQuery(usersBase);
+
+    authenticateQuery.prepare(
+        "SELECT 1 FROM UserBase "
+        "WHERE login = :Login AND userpassword = :Userpassword");
+
+    authenticateQuery.bindValue(":Login", login);
+    authenticateQuery.bindValue(":Userpassword", password);
+
+    if (!authenticateQuery.exec())
+    {
+        qDebug() << "[DataBase] user auntificate error:" << authenticateQuery.lastError().text();
+    }
+
+
+    if(authenticateQuery.next())
+    {
+        qDebug() << "[DataBase] user auntificated";
+        return true;
+    }
+    else
+    {
+        qDebug() << "[DataBase] user not auntificated";
+        return false;
+    }
+
 }

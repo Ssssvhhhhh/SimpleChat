@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableWidgetServers->verticalHeader()->hide();
     ui->tableWidgetServers->horizontalHeader()->hide();
 
+
 }
 
 MainWindow::~MainWindow()
@@ -53,6 +54,15 @@ void MainWindow::readServerResponse()
     QByteArray responseServerData = userSocket->readAll();
     QString messageFromServer = QString::fromUtf8(responseServerData);
     qDebug() << "[Client] " << "message from server " << messageFromServer;
+    if(messageFromServer.startsWith("AUT"))
+    {
+        QStringList splitedDataFromServer = messageFromServer.split("|");
+        if(splitedDataFromServer[1] == "Success")
+        {
+            ui->stackedWidget->setCurrentIndex(0);
+            ui->stackedWidgetTab->setCurrentIndex(1);
+        }
+    }
 
 }
 
@@ -86,6 +96,16 @@ void MainWindow::addServer()
 
 }
 
+void MainWindow::sendAuthorizationData()
+{
+    QString login = ui->lineEditLogin->text();
+    QString password = ui->lineEditPassword->text();
+
+    QString authorizationData = "AUT|" + login + "|" + password;
+
+    userSocket->write(authorizationData.toUtf8());
+    userSocket->flush();
+}
 
 
 void MainWindow::on_pushButtonOpenCloseTab_clicked()
@@ -102,7 +122,7 @@ void MainWindow::on_pushButtonAddServer_clicked()
 
 void MainWindow::on_pushButtonBack_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(0);
+    isAuthorized ? ui->stackedWidget->setCurrentIndex(0) : ui->stackedWidget->setCurrentIndex(3);
 }
 
 
@@ -121,5 +141,11 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_pushButtonBack_2_clicked()
 {
     ui->stackedWidgetTab->setCurrentIndex(0);
+}
+
+
+void MainWindow::on_pushButtonAuthorization_clicked()
+{
+    sendAuthorizationData();
 }
 

@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 
     MainWindow w;
 
-
+    /*
     UserDataBase Base;
     UserDataBase::userData Data;
     Data.login = "asd";
@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
     Data.sername = "asd";
     Data.password = "asd";
     Base.addUserInDataBase(Data);
+    */
 
     w.show();
 

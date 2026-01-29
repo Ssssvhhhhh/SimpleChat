@@ -4,6 +4,8 @@ Server::Server(QObject* parent, int port) : QTcpServer(parent)
 {
     qDebug() << "[Sever]" << "started";
     listen(QHostAddress::Any, port);
+
+    UserBase = new UserDataBase();
 }
 
 void Server::incomingConnection(qintptr socketDescriptor)
@@ -28,11 +30,13 @@ void Server::userDisconected()
 void Server::broadcastMessage(QTcpSocket *sender, const QString &message)
 {
     //QString fullMessage = message;
+    /*
     for(auto iter = userSocketsAndName.begin(); iter != userSocketsAndName.end(); iter++)
     {
         //QTcpSocket* userInChat = iter.key();
 
     }
+    */
 }
 
 void Server::readClientData()
@@ -47,9 +51,20 @@ void Server::readClientData()
     QString userMessage = QString::fromUtf8(data);
     qDebug() << "[Server] "  << "message form user "  << userMessage;
 
-    if(userMessage == "Ping")
+    if(userMessage.startsWith("AUT"))
     {
-        meesageToUser(userSenderSocket);
+        QStringList splitetedUserData = userMessage.split("|");
+        qDebug() << "[Server] "  << splitetedUserData[1] << splitetedUserData[2];
+
+        if(UserBase->auntificate(splitetedUserData[1],splitetedUserData[2] ))
+        {
+            sendAuthMessage(userSenderSocket, true);
+            authorizedUsers[userSenderSocket] = splitetedUserData[1];
+        }
+        else
+        {
+            sendAuthMessage(userSenderSocket, false);
+        }
     }
 }
 
@@ -59,5 +74,23 @@ void Server::meesageToUser(QTcpSocket *userSocketMessage)
     userSocketMessage->write(messageToUser.toUtf8());
     userSocketMessage->flush();
 
+}
+
+void Server::sendAuthMessage(QTcpSocket* userAutSocket, bool isAauthenticated)
+{
+    QString autMessage = "AUT|";
+    if(isAauthenticated)
+    {
+        autMessage+="Success";
+        userAutSocket->write(autMessage.toUtf8());
+        userAutSocket->flush();
+    }
+    else
+    {
+        autMessage+="Error";
+        userAutSocket->write(autMessage.toUtf8());
+        userAutSocket->flush();
+
+    }
 }
 

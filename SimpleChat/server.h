@@ -1,9 +1,13 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include "userdatabase.h"
+
+
 #include <QObject>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QStringList>
 
 class Server : public QTcpServer
 {
@@ -13,13 +17,14 @@ public:
     void incomingConnection(qintptr socketDescriptor) override;
     void readClientData();
     void meesageToUser(QTcpSocket* userSocketMessage);
+    void sendAuthMessage(QTcpSocket* userAutSocket, bool isAauthenticated);
     void userDisconected();
-
     void broadcastMessage(QTcpSocket* sender, const QString& message);
+
 private:
     //QSet<QTcpSocket*> userSockets;
-    QMap<QTcpSocket*, QString> userSocketsAndName;
-
+    QMap<QTcpSocket*, QString> authorizedUsers;
+    UserDataBase* UserBase;
 
 };
 

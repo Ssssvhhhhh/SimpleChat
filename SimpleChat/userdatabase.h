@@ -24,6 +24,8 @@ public:
     };
 
     void addUserInDataBase(userData data);
+    bool auntificate(const QString& login , const QString& password);
+
 private:
     QSqlDatabase usersBase;
 };
