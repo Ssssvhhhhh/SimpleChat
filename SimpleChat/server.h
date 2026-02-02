@@ -16,15 +16,15 @@ public:
     Server(QObject *parent, int port);
     void incomingConnection(qintptr socketDescriptor) override;
     void readClientData();
-    void meesageToUser(QTcpSocket* userSocketMessage);
-    void sendAuthMessage(QTcpSocket* userAutSocket, bool isAauthenticated);
+    void sendAuthMessage(QTcpSocket* userAutSocket, QString userId, bool isAauthenticated);
     void sendUserFullName(QTcpSocket* userFullNameSocket); // поменять название сокета
+    void sendChatData(QTcpSocket* userSocketForChatHistory,QByteArray chatData);
     void userDisconected();
-    void broadcastMessage(QTcpSocket* sender, const QString& message);
+    void broadcastPrivateMessage(int senderId, int reciverId, QString message);
 
 private:
     //QSet<QTcpSocket*> userSockets;
-    QMap<QTcpSocket*, QString> authorizedUsers;
+    QMap<QTcpSocket*, int> authorizedUsers;
     UserDataBase* UserBase;
 
 };

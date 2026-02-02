@@ -37,7 +37,13 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QTreeWidget" name="treeWidget"/>
+        <widget class="QTreeWidget" name="treeWidget">
+         <column>
+          <property name="text">
+           <string notr="true">1</string>
+          </property>
+         </column>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="pushButtonAddServer">
@@ -91,7 +97,7 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidget">
          <property name="currentIndex">
-          <number>3</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="pageChat">
           <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -153,7 +159,11 @@
                   </widget>
                  </item>
                  <item row="0" column="1">
-                  <widget class="QLineEdit" name="lineEditServerName"/>
+                  <widget class="QLineEdit" name="lineEditServerName">
+                   <property name="text">
+                    <string>127.0.0.1</string>
+                   </property>
+                  </widget>
                  </item>
                  <item row="1" column="0">
                   <widget class="QLabel" name="labelIPServer">
@@ -163,7 +173,11 @@
                   </widget>
                  </item>
                  <item row="1" column="1">
-                  <widget class="QLineEdit" name="lineEditServerIP"/>
+                  <widget class="QLineEdit" name="lineEditServerIP">
+                   <property name="text">
+                    <string>127.0.0.1</string>
+                   </property>
+                  </widget>
                  </item>
                  <item row="2" column="0">
                   <widget class="QLabel" name="labelPortServer">
@@ -173,7 +187,11 @@
                   </widget>
                  </item>
                  <item row="2" column="1">
-                  <widget class="QLineEdit" name="lineEditServerPort"/>
+                  <widget class="QLineEdit" name="lineEditServerPort">
+                   <property name="text">
+                    <string>1234</string>
+                   </property>
+                  </widget>
                  </item>
                 </layout>
                </item>

@@ -11,6 +11,8 @@ int main(int argc, char *argv[])
     //Server server2(nullptr, 1235);
 
     MainWindow w;
+    MainWindow w2;
+
     //UserDataBase Base;
     //Base.userNameSernameForSending();
     /*
@@ -24,6 +26,6 @@ int main(int argc, char *argv[])
     */
 
     w.show();
-
+    w2.show();
     return a.exec();
 }

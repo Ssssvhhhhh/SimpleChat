@@ -62,18 +62,29 @@ void MainWindow::readServerResponse()
         if(splitedDataFromServer[1] == "Success")
         {
             ui->stackedWidget->setCurrentIndex(0);
-            addUserFullNameInTab(splitedDataFromServer[3]);
+            addUserFullNameInTab(splitedDataFromServer[4]);
+            userId = splitedDataFromServer[2].toInt();
+            qDebug() << "[Client] " << "user id" << userId;
         }
+    }
+    if(messageFromServer.startsWith("MSG"))
+    {
+        QStringList splitedMessageFromServer = messageFromServer.split("|");
+        if(currentChatOrUserId == splitedMessageFromServer[1].toInt())
+        {
+            ui->textBrowserChat->append(usersNamesAndId[splitedMessageFromServer[1].toInt()] + ":" + splitedMessageFromServer[2]);
+        }
+
+    }
+    if(messageFromServer.startsWith("CHAT"))
+    {
+        QStringList splitedChatMessages = messageFromServer.split("|");
+
+        loadChatMessages(splitedChatMessages[1]);
     }
 
 }
 
-void MainWindow::sendDataToServer()
-{
-    QString message = "Ping";
-    userSocket->write(message.toUtf8());
-    userSocket->flush();
-}
 
 void MainWindow::addServer()
 {
@@ -125,13 +136,57 @@ void MainWindow::addUserFullNameInTab(const QString& usersFullName)
     {
         QJsonObject usersNameObj = value.toObject();
         QString fullName = usersNameObj["full_name"].toString();
+        QStringList splitedNameForId = fullName.split("&"); // подумать над сплитом
+
+        usersNamesAndId[splitedNameForId[1].toInt()] = splitedNameForId[0]; //может удалить?
 
         QTreeWidgetItem* userNameItem = new QTreeWidgetItem(serverItem);
-        userWidget = new UserStatusWidget(nullptr, fullName);
+        userWidget = new UserStatusWidget(nullptr, splitedNameForId[0], splitedNameForId[1].toInt());
         ui->treeWidget->setItemWidget(userNameItem,0,userWidget);
         qDebug() << "[Client] " << fullName;
+
+        connect(userWidget, &UserStatusWidget::userNameClicked, this, &MainWindow::onUserNameRecevied);
     }
 }
+
+void MainWindow::sendMessageToCurrentUser()
+{
+    QString message = ui->lineEditMessage->text();
+    QString fullMessage = "MSG|"+ QString::number(userId) + "|" + QString::number(currentChatOrUserId) + "|" + message;
+    userSocket->write(fullMessage.toUtf8());
+    userSocket->flush();
+    ui->textBrowserChat->append(usersNamesAndId[userId] + ":" + message);
+    ui->lineEditMessage->clear();
+}
+
+void MainWindow::onUserNameRecevied(int id)
+{
+    currentChatOrUserId = id;
+    getAllMessagesInChat(userId, currentChatOrUserId);
+    qDebug()<<"[Client]" << "current user id" << currentChatOrUserId;
+}
+
+void MainWindow::getAllMessagesInChat(int senderId, int reciverId)
+{
+    QString usersIds = "CHAT|"+QString::number(senderId) + "|" + QString::number(reciverId);
+    userSocket->write(usersIds.toUtf8());
+    userSocket->flush();
+}
+
+void MainWindow::loadChatMessages(const QString &chatMessages)
+{
+    QJsonDocument chatMessagesDoc = QJsonDocument::fromJson(chatMessages.toUtf8());
+    QJsonArray chatMessagesArray = chatMessagesDoc.array();
+
+    for(const QJsonValue& value : chatMessagesArray)
+    {
+        QJsonObject chatMessagsObj = value.toObject();
+        QString message = chatMessagsObj["message"].toString(); // Сделать чтобы вместо id было имя пользлватетля!!
+        ui->textBrowserChat->append(message);
+    }
+}
+
+
 
 
 void MainWindow::on_pushButtonOpenCloseTab_clicked()
@@ -139,31 +194,25 @@ void MainWindow::on_pushButtonOpenCloseTab_clicked()
     opencloseTab();
 }
 
-
 void MainWindow::on_pushButtonAddServer_clicked()
 {
     openServerCreationSettings();
 }
-
 
 void MainWindow::on_pushButtonBack_clicked()
 {
     isAuthorized ? ui->stackedWidget->setCurrentIndex(0) : ui->stackedWidget->setCurrentIndex(3);
 }
 
-
 void MainWindow::on_pushButtonSend_clicked()
 {
-    sendDataToServer();
+    sendMessageToCurrentUser();
 }
-
 
 void MainWindow::on_pushButton_clicked()
 {
     addServer();
 }
-
-
 
 void MainWindow::on_pushButtonAuthorization_clicked()
 {

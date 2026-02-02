@@ -33,11 +33,13 @@ public:
     void openServerCreationSettings();
     void openCloseServerUsers();
     void readServerResponse();
-    void sendDataToServer();
     void addServer();
     void sendAuthorizationData();
     void addUserFullNameInTab(const QString& usersFullName);
-
+    void sendMessageToCurrentUser();
+    void onUserNameRecevied(int id);
+    void getAllMessagesInChat(int senderId, int reciverId);
+    void loadChatMessages(const QString& chatMessages); // может не const QString& chatMessages?
 
 private slots:
     void on_pushButtonOpenCloseTab_clicked();
@@ -55,6 +57,10 @@ private:
     UserStatusWidget* userWidget;
     QTreeWidgetItem *serverItem ; // подумать о другой реализации (другие сервера)
     bool isAuthorized = false;
+    QMap<int, QString> usersNamesAndId;
+    int userId;
+    int currentChatOrUserId;
+
 
 };
 #endif // MAINWINDOW_H
