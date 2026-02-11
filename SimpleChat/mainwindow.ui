@@ -46,6 +46,16 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="pushButtonCreateGroup">
+         <property name="text">
+          <string>Create group</string>
+         </property>
+         <property name="icon">
+          <iconset theme="QIcon::ThemeIcon::UserAvailable"/>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="pushButtonAddServer">
          <property name="text">
           <string>Add</string>
@@ -97,39 +107,8 @@
        <item>
         <widget class="QStackedWidget" name="stackedWidget">
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
-         <widget class="QWidget" name="pageChat">
-          <layout class="QVBoxLayout" name="verticalLayout_4">
-           <item>
-            <layout class="QVBoxLayout" name="verticalLayout">
-             <property name="sizeConstraint">
-              <enum>QLayout::SizeConstraint::SetMaximumSize</enum>
-             </property>
-             <item>
-              <widget class="QTextBrowser" name="textBrowserChat"/>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout">
-               <item>
-                <widget class="QLineEdit" name="lineEditMessage"/>
-               </item>
-               <item>
-                <widget class="QPushButton" name="pushButtonSend">
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="icon">
-                  <iconset theme="QIcon::ThemeIcon::DocumentSend"/>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </widget>
          <widget class="QWidget" name="pageServerSettings">
           <layout class="QVBoxLayout" name="verticalLayout_7">
            <item>
@@ -228,7 +207,6 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="pageUserSettings"/>
          <widget class="QWidget" name="pageAuthorization">
           <widget class="QPushButton" name="pushButtonAuthorization">
            <property name="geometry">
@@ -275,6 +253,73 @@
             </item>
            </layout>
           </widget>
+         </widget>
+         <widget class="QWidget" name="pageChat">
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout">
+             <property name="sizeConstraint">
+              <enum>QLayout::SizeConstraint::SetMaximumSize</enum>
+             </property>
+             <item>
+              <widget class="QTextBrowser" name="textBrowserChat"/>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout">
+               <item>
+                <widget class="QLineEdit" name="lineEditMessage"/>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pushButtonSend">
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset theme="QIcon::ThemeIcon::DocumentSend"/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="pageUserSettings"/>
+         <widget class="QWidget" name="pageCreateGroupChat">
+          <layout class="QVBoxLayout" name="verticalLayout_8">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Chat name</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineEditGroupName"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QTableWidget" name="tableWidgetGroup"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButtonSendGroupData">
+             <property name="text">
+              <string>Create</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButtonBackToChats">
+             <property name="text">
+              <string>Back</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </widget>
        </item>

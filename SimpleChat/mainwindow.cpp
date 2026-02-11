@@ -20,6 +20,10 @@ MainWindow::MainWindow(QWidget *parent)
     */
     ui->treeWidget->setColumnCount(1);
     ui->treeWidget->setHeaderHidden(true);
+    ui->pushButtonCreateGroup->hide();
+    ui->tableWidgetGroup->setColumnCount(1);
+    ui->tableWidgetGroup->horizontalHeader()->hide();
+
 }
 
 MainWindow::~MainWindow()
@@ -61,9 +65,12 @@ void MainWindow::readServerResponse()
         QStringList splitedDataFromServer = messageFromServer.split("|");
         if(splitedDataFromServer[1] == "Success")
         {
-            ui->stackedWidget->setCurrentIndex(0);
-            addUserFullNameInTab(splitedDataFromServer[4]);
+            ui->stackedWidget->setCurrentIndex(2);
+            ui->pushButtonCreateGroup->show();
             userId = splitedDataFromServer[2].toInt();
+
+            addUserFullNameInTab(splitedDataFromServer[4]);
+
             qDebug() << "[Client] " << "user id" << userId;
         }
     }
@@ -74,13 +81,33 @@ void MainWindow::readServerResponse()
         {
             ui->textBrowserChat->append(usersNamesAndId[splitedMessageFromServer[1].toInt()] + ":" + splitedMessageFromServer[2]);
         }
-
+    }
+    if(messageFromServer.startsWith("GMSG"))
+    {
+        QStringList splitedGroupMessageFromServer = messageFromServer.split("|");
+        if(currentChatOrUserId == splitedGroupMessageFromServer[2].toInt())
+        {
+            ui->textBrowserChat->append(usersNamesAndId[splitedGroupMessageFromServer[1].toInt()] + ":" + splitedGroupMessageFromServer[3]);
+        }
+    }
+    if(messageFromServer.startsWith("GCHAT"))
+    {
+        QStringList splitedGroupMessagesFromServer = messageFromServer.split("|");
+        loadGroupChatMessages(splitedGroupMessagesFromServer[1]);
     }
     if(messageFromServer.startsWith("CHAT"))
     {
         QStringList splitedChatMessages = messageFromServer.split("|");
-
         loadChatMessages(splitedChatMessages[1]);
+    }
+
+    if(messageFromServer.startsWith("CREATE"))
+    {
+        QStringList splitedGroupData = messageFromServer.split("|");
+        QTreeWidgetItem* groupNameItem = new QTreeWidgetItem(serverItem);
+        userWidget = new UserStatusWidget(nullptr, splitedGroupData[1], splitedGroupData[2].toInt(), "group");
+        ui->treeWidget->setItemWidget(groupNameItem,0,userWidget);
+        connect(userWidget, &UserStatusWidget::userNameClicked, this, &MainWindow::onUserNameRecevied);
     }
 
 }
@@ -96,24 +123,6 @@ void MainWindow::addServer()
     serverItem = new QTreeWidgetItem(ui->treeWidget);
     serverWidget = new CustomWidget(nullptr, userSocket, serverName,serverIP,serverPort.toInt());
     ui->treeWidget->setItemWidget(serverItem, 0, serverWidget);
-
-    /*
-    int row = ui->tableWidgetServers->rowCount();
-    ui->tableWidgetServers->insertRow(row);
-    ui->tableWidgetServers->setRowHeight(row, 50);
-
-
-    QWidget* cellWidget = new QWidget(ui->tableWidgetServers);
-    QHBoxLayout* layout = new QHBoxLayout(cellWidget);
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(0);
-
-    serverWidget = new CustomWidget(cellWidget, userSocket, serverName,serverIP,serverPort.toInt());
-    layout->addWidget(serverWidget);
-
-    ui->tableWidgetServers->setCellWidget(row, 0, cellWidget);
-    */
-
 }
 
 void MainWindow::sendAuthorizationData()
@@ -130,41 +139,87 @@ void MainWindow::sendAuthorizationData()
 void MainWindow::addUserFullNameInTab(const QString& usersFullName)
 {
     QJsonDocument usersNameDoc = QJsonDocument::fromJson(usersFullName.toUtf8());
-    QJsonArray usersNameArray = usersNameDoc.array();
+    QJsonObject rootObj = usersNameDoc.object();
+    QJsonArray usersNameArray = rootObj["users"].toArray();
 
     for(const QJsonValue& value : usersNameArray)
     {
-        QJsonObject usersNameObj = value.toObject();
-        QString fullName = usersNameObj["full_name"].toString();
-        QStringList splitedNameForId = fullName.split("&"); // подумать над сплитом
+        QJsonObject userObj = value.toObject();
+        int id = userObj["id"].toInt();
 
-        usersNamesAndId[splitedNameForId[1].toInt()] = splitedNameForId[0]; //может удалить?
+
+
+        QString name = userObj["name"].toString();
+        QString sername = userObj["sername"].toString();
+        QString fullName = name + " " + sername;
+        usersNamesAndId[id] = fullName;
+
+        if(userId == id)
+            continue;
 
         QTreeWidgetItem* userNameItem = new QTreeWidgetItem(serverItem);
-        userWidget = new UserStatusWidget(nullptr, splitedNameForId[0], splitedNameForId[1].toInt());
-        ui->treeWidget->setItemWidget(userNameItem,0,userWidget);
-        qDebug() << "[Client] " << fullName;
+        userWidget = new UserStatusWidget(nullptr, fullName, id, "private");
+        ui->treeWidget->setItemWidget(userNameItem, 0 , userWidget);
 
         connect(userWidget, &UserStatusWidget::userNameClicked, this, &MainWindow::onUserNameRecevied);
+        connect(userWidget, &UserStatusWidget::userIdForGroup, this, &MainWindow::addUserInGroup);
     }
+
+
+    QJsonArray groupArray = rootObj["chats"].toArray();
+
+    for(const QJsonValue& value : groupArray)
+    {
+        QJsonObject chatObj = value.toObject();
+        int chatId = chatObj["chat_id"].toInt();
+        QString groupName = chatObj["name"].toString();
+        QString type = chatObj["type"].toString();
+
+        usersNamesAndId[chatId] = groupName;
+
+        QTreeWidgetItem* groupNameItem = new QTreeWidgetItem(serverItem);
+        userWidget = new UserStatusWidget(nullptr, groupName, chatId, "group");
+        ui->treeWidget->setItemWidget(groupNameItem,0,userWidget);
+        connect(userWidget, &UserStatusWidget::userNameClicked, this, &MainWindow::onUserNameRecevied);
+    }
+
 }
 
 void MainWindow::sendMessageToCurrentUser()
 {
     QString message = ui->lineEditMessage->text();
-    QString fullMessage = "MSG|"+ QString::number(userId) + "|" + QString::number(currentChatOrUserId) + "|" + message;
+    QString fullMessage = "MSG|" +  currentChatType +"|"+ QString::number(userId) + "|" + QString::number(currentChatOrUserId) + "|" + message;
     userSocket->write(fullMessage.toUtf8());
     userSocket->flush();
     ui->textBrowserChat->append(usersNamesAndId[userId] + ":" + message);
     ui->lineEditMessage->clear();
 }
 
-void MainWindow::onUserNameRecevied(int id)
+void MainWindow::onUserNameRecevied(int id, QString type)
 {
     currentChatOrUserId = id;
-    getAllMessagesInChat(userId, currentChatOrUserId);
-    qDebug()<<"[Client]" << "current user id" << currentChatOrUserId;
+    currentChatType = type;
+
+    if(currentChatType == "private")
+    {
+        getAllMessagesInChat(userId, currentChatOrUserId);
+    }
+    else
+    {
+        getAllMessagesInGroupChat(currentChatOrUserId);
+    }
+    qDebug()<<"[Client]" << "current user id" << currentChatOrUserId << currentChatType ;
+    ui->textBrowserChat->clear();
 }
+
+void MainWindow::getAllMessagesInGroupChat(int chatId)
+{
+    QString groupMessagesRequest = "GCHAT|" + QString::number(chatId);
+    userSocket->write(groupMessagesRequest.toUtf8());
+    userSocket->flush();
+}
+
+
 
 void MainWindow::getAllMessagesInChat(int senderId, int reciverId)
 {
@@ -181,13 +236,68 @@ void MainWindow::loadChatMessages(const QString &chatMessages)
     for(const QJsonValue& value : chatMessagesArray)
     {
         QJsonObject chatMessagsObj = value.toObject();
-        QString message = chatMessagsObj["message"].toString(); // Сделать чтобы вместо id было имя пользлватетля!!
-        ui->textBrowserChat->append(message);
+        QString name = chatMessagsObj["sender"].toString();
+        QString text = chatMessagsObj["text"].toString();
+
+        ui->textBrowserChat->append(name + ": " + text);
     }
 }
 
+void MainWindow::loadGroupChatMessages(const QString &groupMessages)
+{
+    QJsonDocument usersMessagesDoc = QJsonDocument::fromJson(groupMessages.toUtf8());
+    QJsonArray groupChatMessagesArray = usersMessagesDoc.array();
+    for(const QJsonValue& value : groupChatMessagesArray)
+    {
+        QJsonObject groupChatMessagsObj = value.toObject();
+        QString name = groupChatMessagsObj["sender_name"].toString();
+        QString text = groupChatMessagsObj["message"].toString();
+        ui->textBrowserChat->append(name + ": " + text);
+    }
+}
 
+void MainWindow::addUserInGroup(int userId)
+{
+    usersIdsForGroup.append(userId);
+    int row = ui->tableWidgetGroup->rowCount();
+    ui->tableWidgetGroup->insertRow(row);
+    ui->tableWidgetGroup->setItem(row, 0, new QTableWidgetItem(usersNamesAndId[userId]));
+}
 
+void MainWindow::sendDataToCreateGroupChat(QList<int> usersIdsForGroup)
+{
+    QString GroupRequest = "CREATE|" + ui->lineEditGroupName->text() + "|";
+    GroupRequest.append("&"+ QString::number(userId));
+    for(int groupIter : usersIdsForGroup)
+    {
+        GroupRequest.append("&");
+        GroupRequest.append(QString::number(groupIter));
+    }
+    userSocket->write(GroupRequest.toUtf8());
+    userSocket->flush();
+}
+
+void MainWindow::showAddButtonOnWidgets(bool& isShow)
+{
+    QList<UserStatusWidget*> userWidgets = findChildren<UserStatusWidget*>();
+    for(UserStatusWidget* widgetIter : userWidgets)
+    {
+        if(widgetIter->getType() == "group" )
+            continue;
+
+        if(!isShow)
+        {
+            widgetIter->showButton();
+            isAddButtonShow = false;
+        }
+        else
+        {
+            widgetIter->hideButton();
+            isAddButtonShow = true;
+        }
+
+    }
+}
 
 void MainWindow::on_pushButtonOpenCloseTab_clicked()
 {
@@ -201,7 +311,7 @@ void MainWindow::on_pushButtonAddServer_clicked()
 
 void MainWindow::on_pushButtonBack_clicked()
 {
-    isAuthorized ? ui->stackedWidget->setCurrentIndex(0) : ui->stackedWidget->setCurrentIndex(3);
+    isAuthorized ? ui->stackedWidget->setCurrentIndex(2) : ui->stackedWidget->setCurrentIndex(1);
 }
 
 void MainWindow::on_pushButtonSend_clicked()
@@ -217,5 +327,23 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_pushButtonAuthorization_clicked()
 {
     sendAuthorizationData();
+}
+
+void MainWindow::on_pushButtonCreateGroup_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(4);
+    showAddButtonOnWidgets(isAddButtonShow);
+}
+
+
+void MainWindow::on_pushButtonSendGroupData_clicked()
+{
+    sendDataToCreateGroupChat(usersIdsForGroup);
+}
+
+
+void MainWindow::on_pushButtonBackToChats_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(2);
 }
 

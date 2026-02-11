@@ -37,9 +37,16 @@ public:
     void sendAuthorizationData();
     void addUserFullNameInTab(const QString& usersFullName);
     void sendMessageToCurrentUser();
-    void onUserNameRecevied(int id);
+    void onUserNameRecevied(int id, QString type);
+    void onChatTypeRecevide(QString type);
+    void getAllMessagesInGroupChat(int chatId);
     void getAllMessagesInChat(int senderId, int reciverId);
     void loadChatMessages(const QString& chatMessages); // может не const QString& chatMessages?
+    void loadGroupChatMessages(const QString& groupMessages);
+    void addUserInGroup(int userId);
+    void sendDataToCreateGroupChat(QList<int> usersIdsForGroup);
+
+    void showAddButtonOnWidgets(bool& isShow);
 
 private slots:
     void on_pushButtonOpenCloseTab_clicked();
@@ -48,6 +55,11 @@ private slots:
     void on_pushButtonSend_clicked();
     void on_pushButton_clicked();
     void on_pushButtonAuthorization_clicked();
+    void on_pushButtonCreateGroup_clicked();
+
+    void on_pushButtonSendGroupData_clicked();
+
+    void on_pushButtonBackToChats_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -57,9 +69,13 @@ private:
     UserStatusWidget* userWidget;
     QTreeWidgetItem *serverItem ; // подумать о другой реализации (другие сервера)
     bool isAuthorized = false;
+    bool isAddButtonShow = false;
     QMap<int, QString> usersNamesAndId;
+    QMap<int, QString> groupChats;
     int userId;
     int currentChatOrUserId;
+    QString currentChatType;
+    QList<int> usersIdsForGroup;
 
 
 };

@@ -42,29 +42,72 @@ void UserDataBase::addUserInDataBase(userData data)
     }
 }
 
-QByteArray UserDataBase::userNameSernameForSending()
+QByteArray UserDataBase::userDataForSending(int userId)
 {
-    QSqlQuery userDataQuery(usersBase);
+    QJsonObject rootObject;
 
-    userDataQuery.prepare("SELECT name, sername, id FROM UserBase");
+    QSqlQuery userDataQuery(usersBase);
+    userDataQuery.prepare("SELECT id, name, sername FROM UserBase");
+
     if (!userDataQuery.exec())
     {
-        qDebug() << "[DataBase] user name and sername selected error: " << userDataQuery.lastError().text();
+        qDebug() << "[DataBase] user select error:"
+                 << userDataQuery.lastError().text();
     }
 
-    QJsonArray userDataJson;
+    QJsonArray usersArray;
+
     while (userDataQuery.next())
     {
-        QJsonObject objectUserData;
-        objectUserData["full_name"] = userDataQuery.value("name").toString() + " " + userDataQuery.value("sername").toString() + "&" + userDataQuery.value("id").toString();
-        userDataJson.append(objectUserData);
+        QJsonObject userObj;
+        userObj["id"] = userDataQuery.value("id").toInt();
+        userObj["name"] = userDataQuery.value("name").toString();
+        userObj["sername"] = userDataQuery.value("sername").toString();
+
+        usersArray.append(userObj);
     }
-    QJsonDocument usersDataJsonDoc(userDataJson);
-    qDebug() << "[DataBase]" << "users" << usersDataJsonDoc;
 
-    return usersDataJsonDoc.toJson();
+    rootObject["users"] = usersArray;
 
+
+    QSqlQuery chatsQuery(usersBase);
+    chatsQuery.prepare(R"(
+        SELECT chats.id, chats.name, chats.type
+        FROM chats
+        JOIN chat_users ON chats.id = chat_users.chat_id
+        WHERE chat_users.user_id = ?
+    )");
+
+    chatsQuery.addBindValue(userId);
+
+    if (!chatsQuery.exec())
+    {
+        qDebug() << "[DataBase] chats select error:"
+                 << chatsQuery.lastError().text();
+    }
+
+    QJsonArray chatsArray;
+
+    while (chatsQuery.next())
+    {
+        QJsonObject chatObj;
+        chatObj["chat_id"] = chatsQuery.value("id").toInt();
+        chatObj["name"] = chatsQuery.value("name").toString();
+        chatObj["type"] = chatsQuery.value("type").toString();
+
+        if (chatObj["type"] == "private") // костыль
+            continue;
+
+        chatsArray.append(chatObj);
+    }
+
+    rootObject["chats"] = chatsArray;
+
+
+    QJsonDocument doc(rootObject);
+    return doc.toJson();
 }
+
 
 bool UserDataBase::auntificate(const QString &login, const QString &password)
 {
@@ -116,7 +159,7 @@ int UserDataBase::createChat()
 {
     QSqlQuery createdChatQuery(usersBase);
 
-    if (!createdChatQuery.exec("INSERT INTO chats DEFAULT VALUES")) {
+    if (!createdChatQuery.exec("INSERT INTO chats (type) VALUES ('private')")) {
         qDebug() << "[DataBase]"  << "chat creating error " << createdChatQuery.lastError().text();
         return -1;
     }
@@ -156,36 +199,42 @@ bool UserDataBase::addUserToChat(int chatId, int userId)
     return true;
 }
 
-int UserDataBase::getChatIdBetweenUsers(int user1, int user2)
+int UserDataBase::getPrivateChatIdBetweenUsers(int user1, int user2)
 {
-    QSqlQuery getChatIdBetweenUsersQuery(usersBase);
-    getChatIdBetweenUsersQuery.prepare(        "SELECT cu1.chat_id "
-                                       "FROM chat_users cu1 "
-                                       "JOIN chat_users cu2 ON cu1.chat_id = cu2.chat_id "
-                                       "WHERE cu1.user_id = ? AND cu2.user_id = ?");
+    QSqlQuery getPrivateChatIdQuery(usersBase);
 
-    getChatIdBetweenUsersQuery.addBindValue(user1);
-    getChatIdBetweenUsersQuery.addBindValue(user2);
+    QString sql =
+        "SELECT c.id "
+        "FROM chats c "
+        "JOIN chat_users cu1 ON c.id = cu1.chat_id "
+        "JOIN chat_users cu2 ON c.id = cu2.chat_id "
+        "WHERE c.type = 'private' "
+        "AND cu1.user_id = ? "
+        "AND cu2.user_id = ?";
 
-    if (!getChatIdBetweenUsersQuery.exec())
+    getPrivateChatIdQuery.prepare(sql);
+    getPrivateChatIdQuery.addBindValue(user1);
+    getPrivateChatIdQuery.addBindValue(user2);
+
+    if (!getPrivateChatIdQuery.exec())
     {
-        qDebug() << "[DataBase] getChatId error:" << getChatIdBetweenUsersQuery.lastError().text();
+        qDebug() << "getPrivateChatId error:" << getPrivateChatIdQuery.lastError().text();
         return -1;
     }
-    if(getChatIdBetweenUsersQuery.next())
-    {
-        return getChatIdBetweenUsersQuery.value(0).toInt();
-    }
+
+    if (getPrivateChatIdQuery.next())
+        return getPrivateChatIdQuery.value(0).toInt();
 
     return -1;
-
 }
+
+
 
 bool UserDataBase::saveMessageToBase(int senderId, int receiverId, const QString &text)
 {
     usersBase.transaction();
 
-    int chatId = getChatIdBetweenUsers(senderId, receiverId);
+    int chatId = getPrivateChatIdBetweenUsers(senderId, receiverId);
 
     if (chatId == -1)
     {
@@ -210,33 +259,145 @@ bool UserDataBase::saveMessageToBase(int senderId, int receiverId, const QString
     return true;
 }
 
-QByteArray UserDataBase::getMessages(int chatId)
+bool UserDataBase::saveGroupMessage(int senderId, int chatId, const QString &text)
 {
-    QSqlQuery getMessageQuery(usersBase);
-
-    getMessageQuery.prepare(
-        "SELECT sender_id, text, created_at "
-        "FROM messages "
-        "WHERE chat_id = ? "
-        "ORDER BY created_at"
-        );
-    getMessageQuery.addBindValue(chatId);
-
-    if (!getMessageQuery.exec()) {
-        qDebug() << "[DataBase] message not get:" << getMessageQuery.lastError().text();
-    }
-
-    QJsonArray chatMessagesData;
-
-
-    while (getMessageQuery.next())
-    {
-        QJsonObject objectChatData;
-        objectChatData["message"] =  getMessageQuery.value(2).toString() + " " + getMessageQuery.value(0).toString() + " " + getMessageQuery.value(1).toString();
-        chatMessagesData.append(objectChatData);
-    }
-
-    QJsonDocument chatDataJson(chatMessagesData);
-    return chatDataJson.toJson();
+    return addMessage(chatId, senderId, text);
 }
 
+QByteArray UserDataBase::getMessages(int chatId)
+{
+    QSqlQuery query(usersBase);
+
+    QString sql =
+        "SELECT u.name, u.sername, m.text "
+        "FROM messages AS m "
+        "INNER JOIN UserBase AS u ON m.sender_id = u.id "
+        "WHERE m.chat_id = ? "
+        "ORDER BY m.id ASC";
+
+    if (!query.prepare(sql)) {
+        qDebug() << "[DataBase] Prepare error:" << query.lastError().text();
+        return QByteArray();
+    }
+
+    query.addBindValue(chatId);
+
+    if (!query.exec()) {
+        qDebug() << "[DataBase] Exec error:" << query.lastError().text();
+        return QByteArray();
+    }
+
+    QJsonArray messagesArray;
+
+    while (query.next())
+    {
+        QJsonObject messageObject;
+
+        QString sender =
+            query.value(0).toString() + " " +
+            query.value(1).toString();
+
+        messageObject["sender"] = sender;
+        messageObject["text"] = query.value(2).toString();
+
+        messagesArray.append(messageObject);
+    }
+
+    QJsonDocument doc(messagesArray);
+    return doc.toJson(QJsonDocument::Compact);
+}
+
+
+
+int UserDataBase::createGroupChat(const QList<int> &userIds, const QString &groupName)
+{
+    QSqlQuery createGroupQuery(usersBase);
+    createGroupQuery.prepare("INSERT INTO chats (type, name) VALUES ('group', ?)");
+    createGroupQuery.addBindValue(groupName);
+
+    if(!createGroupQuery.exec())
+    {
+        qDebug() << "[DataBase] group not created" << createGroupQuery.lastError().text();
+        return -1;
+    }
+
+    int chatId = createGroupQuery.lastInsertId().toInt();
+
+    for (int userId : userIds)
+    {
+        QSqlQuery addUserInGroupQuery(usersBase);
+        addUserInGroupQuery.prepare("INSERT INTO chat_users (chat_id, user_id) VALUES (?, ?)");
+        addUserInGroupQuery.addBindValue(chatId);
+        addUserInGroupQuery.addBindValue(userId);
+
+        if(!addUserInGroupQuery.exec())
+        {
+            qDebug() << "[DataBase] addUserToChat error:"
+                     << addUserInGroupQuery.lastError().text();
+        }
+    }
+
+    return chatId;
+}
+
+
+QList<int> UserDataBase::getChatUsers(int chatId)
+{
+    QList<int> usersIds;
+    QSqlQuery getUsersIdsQuery(usersBase);
+
+    getUsersIdsQuery.prepare("SELECT user_id FROM chat_users WHERE chat_id = ?");
+    getUsersIdsQuery.addBindValue(chatId);
+
+    if(!getUsersIdsQuery.exec())
+    {
+        qDebug() << "[DataBase] get group ids error:" << getUsersIdsQuery.lastError().text();
+        return usersIds;
+    }
+    while(getUsersIdsQuery.next())
+    {
+        usersIds.append(getUsersIdsQuery.value(0).toInt());
+    }
+
+    return usersIds;
+}
+
+QByteArray UserDataBase::getGroupMessages(int chatId)
+{
+    QSqlQuery query(usersBase);
+
+    query.prepare(R"(
+        SELECT
+            m.id AS message_id,
+            u.name || ' ' || u.sername AS sender_name,
+            m.text,
+            m.created_at
+        FROM messages m
+        JOIN UserBase u ON m.sender_id = u.id
+        WHERE m.chat_id = ?
+        ORDER BY m.created_at ASC
+    )");
+
+    query.addBindValue(chatId);
+
+    if (!query.exec())
+    {
+        qDebug() << "[DataBase] getGroupMessages error:" << query.lastError().text();
+        return QByteArray();
+    }
+
+    QJsonArray messagesArray;
+
+    while (query.next())
+    {
+        QJsonObject messageObject;
+
+        messageObject["sender_name"] = query.value("sender_name").toString();
+        messageObject["message"] = query.value("text").toString();
+
+        messagesArray.append(messageObject);
+    }
+
+    QJsonDocument doc(messagesArray);
+    return doc.toJson(QJsonDocument::Indented);
+}

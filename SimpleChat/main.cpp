@@ -12,20 +12,10 @@ int main(int argc, char *argv[])
 
     MainWindow w;
     MainWindow w2;
-
-    //UserDataBase Base;
-    //Base.userNameSernameForSending();
-    /*
-    UserDataBase::userData Data;
-    Data.login = "asd";
-    Data.email = "asd";
-    Data.name = "asd";
-    Data.sername = "asd";
-    Data.password = "asd";
-    Base.addUserInDataBase(Data);
-    */
+    MainWindow w3;
 
     w.show();
     w2.show();
+    w3.show();
     return a.exec();
 }

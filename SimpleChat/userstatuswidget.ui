@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>135</width>
-    <height>34</height>
+    <height>38</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,6 +36,25 @@ color: rgb(0, 0, 0);</string>
      </property>
      <property name="text">
       <string/>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="pushButtonAddInGroupChat">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>20</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset theme="QIcon::ThemeIcon::ContactNew"/>
      </property>
     </widget>
    </item>
