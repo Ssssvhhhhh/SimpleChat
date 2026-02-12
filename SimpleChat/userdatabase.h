@@ -8,6 +8,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSqlRecord>
+#include <QTcpSocket>
 
 #include <QJsonArray>
 #include <QJsonObject>
@@ -28,7 +29,7 @@ public:
     };
 
     void addUserInDataBase(userData data);
-    QByteArray userDataForSending(int userId);
+    QByteArray userDataForSending(int userId, QMap<int, QString> onlineUsersIds);
     bool auntificate(const QString& login , const QString& password);
     QString getUserId(const QString& login);
     int createChat();

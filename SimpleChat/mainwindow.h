@@ -12,6 +12,8 @@
 #include <QJsonDocument>
 
 #include <QStandardItemModel>
+#include <QCloseEvent>
+
 #include <qtreewidget.h>
 
 
@@ -45,7 +47,7 @@ public:
     void loadGroupChatMessages(const QString& groupMessages);
     void addUserInGroup(int userId);
     void sendDataToCreateGroupChat(QList<int> usersIdsForGroup);
-
+    void changeUserStatus(int userId, QString status);
     void showAddButtonOnWidgets(bool& isShow);
 
 private slots:
@@ -56,10 +58,10 @@ private slots:
     void on_pushButton_clicked();
     void on_pushButtonAuthorization_clicked();
     void on_pushButtonCreateGroup_clicked();
-
     void on_pushButtonSendGroupData_clicked();
-
     void on_pushButtonBackToChats_clicked();
+
+    void closeEvent(QCloseEvent* event); // For test delete later
 
 private:
     Ui::MainWindow *ui;

@@ -29,6 +29,8 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    userSocket->disconnectFromHost();
+    qDebug() << "[Client]" << " was destruct";
 }
 
 void MainWindow::opencloseTab()
@@ -105,9 +107,16 @@ void MainWindow::readServerResponse()
     {
         QStringList splitedGroupData = messageFromServer.split("|");
         QTreeWidgetItem* groupNameItem = new QTreeWidgetItem(serverItem);
-        userWidget = new UserStatusWidget(nullptr, splitedGroupData[1], splitedGroupData[2].toInt(), "group");
+        userWidget = new UserStatusWidget(nullptr, splitedGroupData[1], splitedGroupData[2].toInt(), "group", "");
         ui->treeWidget->setItemWidget(groupNameItem,0,userWidget);
         connect(userWidget, &UserStatusWidget::userNameClicked, this, &MainWindow::onUserNameRecevied);
+    }
+    if(messageFromServer.startsWith("STAT"))
+    {
+        QStringList splitedStatusData = messageFromServer.split("|");
+        int id = splitedStatusData[1].toInt();
+        QString status = splitedStatusData[2];
+        changeUserStatus(id, status);
     }
 
 }
@@ -151,6 +160,7 @@ void MainWindow::addUserFullNameInTab(const QString& usersFullName)
 
         QString name = userObj["name"].toString();
         QString sername = userObj["sername"].toString();
+        QString status = userObj["status"].toString();
         QString fullName = name + " " + sername;
         usersNamesAndId[id] = fullName;
 
@@ -158,7 +168,7 @@ void MainWindow::addUserFullNameInTab(const QString& usersFullName)
             continue;
 
         QTreeWidgetItem* userNameItem = new QTreeWidgetItem(serverItem);
-        userWidget = new UserStatusWidget(nullptr, fullName, id, "private");
+        userWidget = new UserStatusWidget(nullptr, fullName, id, "private", status);
         ui->treeWidget->setItemWidget(userNameItem, 0 , userWidget);
 
         connect(userWidget, &UserStatusWidget::userNameClicked, this, &MainWindow::onUserNameRecevied);
@@ -178,7 +188,7 @@ void MainWindow::addUserFullNameInTab(const QString& usersFullName)
         usersNamesAndId[chatId] = groupName;
 
         QTreeWidgetItem* groupNameItem = new QTreeWidgetItem(serverItem);
-        userWidget = new UserStatusWidget(nullptr, groupName, chatId, "group");
+        userWidget = new UserStatusWidget(nullptr, groupName, chatId, "group", "");
         ui->treeWidget->setItemWidget(groupNameItem,0,userWidget);
         connect(userWidget, &UserStatusWidget::userNameClicked, this, &MainWindow::onUserNameRecevied);
     }
@@ -277,6 +287,28 @@ void MainWindow::sendDataToCreateGroupChat(QList<int> usersIdsForGroup)
     userSocket->flush();
 }
 
+void MainWindow::changeUserStatus(int userId, QString status)
+{
+    QList<UserStatusWidget*> userWidgets = findChildren<UserStatusWidget*>();
+    for(UserStatusWidget* widgetIter : userWidgets)
+    {
+        if(widgetIter->getId() == userId)
+        {
+            if(widgetIter->getStatus() == "offline")
+            {
+                widgetIter->setStatus(true);
+                break;
+            }
+            else
+            {
+                widgetIter->setStatus(false);
+                break;
+            }
+        }
+
+    }
+}
+
 void MainWindow::showAddButtonOnWidgets(bool& isShow)
 {
     QList<UserStatusWidget*> userWidgets = findChildren<UserStatusWidget*>();
@@ -298,6 +330,8 @@ void MainWindow::showAddButtonOnWidgets(bool& isShow)
 
     }
 }
+
+
 
 void MainWindow::on_pushButtonOpenCloseTab_clicked()
 {
@@ -346,4 +380,16 @@ void MainWindow::on_pushButtonBackToChats_clicked()
 {
     ui->stackedWidget->setCurrentIndex(2);
 }
+
+
+// For test delete later
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if (userSocket) {
+        connect(userSocket, &QTcpSocket::disconnected, userSocket, &QObject::deleteLater);
+        userSocket->disconnectFromHost();
+    }
+    event->accept();
+}
+
 

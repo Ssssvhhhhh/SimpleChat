@@ -12,11 +12,14 @@ class UserStatusWidget : public QWidget
     Q_OBJECT
 
 public:
-    UserStatusWidget(QWidget *parent, QString userName, int userId, QString chatType);
+    UserStatusWidget(QWidget *parent, const QString& userName, int userId, const QString& chatType, const QString& status);
     ~UserStatusWidget();
     void showButton();
     void hideButton();
     QString getType();
+    QString getStatus();
+    int getId();
+    void setStatus(bool Status);
 private slots:
     void on_pushButton_clicked();
     void on_pushButtonAddInGroupChat_clicked();
@@ -30,6 +33,7 @@ private:
     QString userNameR;
     int userIdR;
     QString type;
+    QString statusR;
 };
 
 #endif // USERSTATUSWIDGET_H

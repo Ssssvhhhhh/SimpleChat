@@ -42,7 +42,7 @@ void UserDataBase::addUserInDataBase(userData data)
     }
 }
 
-QByteArray UserDataBase::userDataForSending(int userId)
+QByteArray UserDataBase::userDataForSending(int userId, QMap<int, QString> onlineUsersIds)
 {
     QJsonObject rootObject;
 
@@ -51,8 +51,7 @@ QByteArray UserDataBase::userDataForSending(int userId)
 
     if (!userDataQuery.exec())
     {
-        qDebug() << "[DataBase] user select error:"
-                 << userDataQuery.lastError().text();
+        qDebug() << "[DataBase] user select error:" << userDataQuery.lastError().text();
     }
 
     QJsonArray usersArray;
@@ -63,7 +62,14 @@ QByteArray UserDataBase::userDataForSending(int userId)
         userObj["id"] = userDataQuery.value("id").toInt();
         userObj["name"] = userDataQuery.value("name").toString();
         userObj["sername"] = userDataQuery.value("sername").toString();
-
+        if(onlineUsersIds[userDataQuery.value("id").toInt()] == "online")
+        {
+            userObj["status"] = "online";
+        }
+        else
+        {
+            userObj["status"] = "offline";
+        }
         usersArray.append(userObj);
     }
 
@@ -227,7 +233,6 @@ int UserDataBase::getPrivateChatIdBetweenUsers(int user1, int user2)
 
     return -1;
 }
-
 
 
 bool UserDataBase::saveMessageToBase(int senderId, int receiverId, const QString &text)

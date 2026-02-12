@@ -12,9 +12,10 @@ void Server::incomingConnection(qintptr socketDescriptor)
 {
     QTcpSocket* userSocket = new QTcpSocket(this);
     userSocket->setSocketDescriptor(socketDescriptor);
-    //userSockets.insert(userSocket);
+    userSockets.insert(userSocket);
     connect(userSocket, &QTcpSocket::readyRead,this, &Server::readClientData);
     connect(userSocket, &QTcpSocket::disconnected,this, &Server::userDisconected);
+
 
     qDebug() << "[Server] " << userSocket << " connected";
 }
@@ -22,11 +23,16 @@ void Server::incomingConnection(qintptr socketDescriptor)
 void Server::userDisconected()
 {
     QTcpSocket *userSocketSender = qobject_cast<QTcpSocket*>(sender());
-    //userSockets.remove(userSocketSender);
+    userSockets.remove(userSocketSender);
     userSocketSender->deleteLater();
-    qDebug() << "[SERVER]" << "user disconnecting";
-}
+    onlineUsersIds[authorizedUsers[userSocketSender]] = "offline";
 
+    sendUserStatus(authorizedUsers[userSocketSender]);
+
+    authorizedUsers.remove(userSocketSender);
+    qDebug() << "[SERVER]" << "user disconnecting";
+
+}
 
 
 void Server::readClientData()
@@ -52,8 +58,9 @@ void Server::readClientData()
 
             sendAuthMessage(userSenderSocket, userId, true);
             authorizedUsers[userSenderSocket] = userId.toInt();
+            onlineUsersIds[userId.toInt()] = "online";
             sendUserFullName(userSenderSocket);
-
+            sendUserStatus(userId.toInt());
         }
         else
         {
@@ -190,9 +197,26 @@ void Server::sendAuthMessage(QTcpSocket* userAutSocket,QString userId, bool isAa
 void Server::sendUserFullName(QTcpSocket* userFullNameSocket)
 {
     QString fullNameIdentifier = "|FullName|";
-    userFullNameSocket->write(fullNameIdentifier.toUtf8() + UserBase->userDataForSending(authorizedUsers[userFullNameSocket])); // продолжить чтобы отправлялись еще и чаты в которых есть пользователь! на данный момент отправляются тольок имя пользовтелей на серевере но не чаты
+    userFullNameSocket->write(fullNameIdentifier.toUtf8() + UserBase->userDataForSending(authorizedUsers[userFullNameSocket], onlineUsersIds) ); // продолжить чтобы отправлялись еще и чаты в которых есть пользователь! на данный момент отправляются тольок имя пользовтелей на серевере но не чаты
     userFullNameSocket->flush();
 }
+
+void Server::sendUserStatus(int userId)
+{
+    QString userSatatus = "STAT|" + QString::number(userId) +"|"+onlineUsersIds[userId];
+    for(auto socketIter = authorizedUsers.begin(); socketIter != authorizedUsers.end(); ++socketIter)
+    {
+        QTcpSocket* userSocket = socketIter.key();
+        int id = socketIter.value();
+        if(id == userId)
+            continue;
+
+        userSocket->write(userSatatus.toUtf8());
+        userSocket->flush();
+    }
+}
+
+
 
 void Server::sendChatData(QTcpSocket* userSocketForChatHistory, QByteArray chatData)
 {
