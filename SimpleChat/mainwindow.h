@@ -49,6 +49,7 @@ public:
     void sendDataToCreateGroupChat(QList<int> usersIdsForGroup);
     void changeUserStatus(int userId, QString status);
     void showAddButtonOnWidgets(bool& isShow);
+    void sendRegistrationData();
 
 private slots:
     void on_pushButtonOpenCloseTab_clicked();
@@ -62,6 +63,12 @@ private slots:
     void on_pushButtonBackToChats_clicked();
 
     void closeEvent(QCloseEvent* event); // For test delete later
+
+    void on_pushButtonReg_clicked();
+
+    void on_pushButtonSignUp_clicked();
+
+    void on_pushButtonBck_clicked();
 
 private:
     Ui::MainWindow *ui;

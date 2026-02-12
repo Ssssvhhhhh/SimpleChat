@@ -331,6 +331,19 @@ void MainWindow::showAddButtonOnWidgets(bool& isShow)
     }
 }
 
+void MainWindow::sendRegistrationData()
+{
+    QString name = ui->lineEditName->text();
+    QString sername = ui->lineEditSername->text();
+    QString login = ui->lineEditLogin_2->text();
+    QString password = ui->lineEditPassword_2->text();
+    QString email = ui->lineEditEmail->text();
+
+    QString registrationMessage = "REG|" + name + "|" + sername + "|" + login + "|"+ password + "|" + email;
+    userSocket->write(registrationMessage.toUtf8());
+    userSocket->flush();
+}
+
 
 
 void MainWindow::on_pushButtonOpenCloseTab_clicked()
@@ -392,4 +405,22 @@ void MainWindow::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
+
+
+void MainWindow::on_pushButtonReg_clicked()
+{
+    sendRegistrationData();
+}
+
+
+void MainWindow::on_pushButtonSignUp_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(3);
+}
+
+
+void MainWindow::on_pushButtonBck_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(1);
+}
 

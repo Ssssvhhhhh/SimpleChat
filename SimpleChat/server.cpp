@@ -114,7 +114,18 @@ void Server::readClientData()
 
         qDebug() << "[Server]" << usersIdsForGroupData;
         broadcastNewGroupChat(UserBase->createGroupChat(userGroupIds, groupName), groupName, userGroupIds);
+    }
+    if(userMessage.startsWith("REG"))
+    {
+        QStringList registrationSplitedData = userMessage.split("|");
+        UserDataBase::userData data;
+        data.name = registrationSplitedData[1];
+        data.sername = registrationSplitedData[2];
+        data.login = registrationSplitedData[3];
+        data.password = registrationSplitedData[4];
+        data.email = registrationSplitedData[5];
 
+        UserBase->addUserInDataBase(data);
     }
 }
 

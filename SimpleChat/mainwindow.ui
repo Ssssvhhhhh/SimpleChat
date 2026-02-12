@@ -218,7 +218,7 @@
             </rect>
            </property>
            <property name="text">
-            <string>Authorization</string>
+            <string>Sign In</string>
            </property>
           </widget>
           <widget class="QWidget" name="layoutWidget">
@@ -253,6 +253,19 @@
             </item>
            </layout>
           </widget>
+          <widget class="QPushButton" name="pushButtonSignUp">
+           <property name="geometry">
+            <rect>
+             <x>230</x>
+             <y>250</y>
+             <width>80</width>
+             <height>24</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Sign Up</string>
+           </property>
+          </widget>
          </widget>
          <widget class="QWidget" name="pageChat">
           <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -285,7 +298,96 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="pageUserSettings"/>
+         <widget class="QWidget" name="pageUserRegistration">
+          <widget class="QPushButton" name="pushButtonReg">
+           <property name="geometry">
+            <rect>
+             <x>210</x>
+             <y>280</y>
+             <width>80</width>
+             <height>24</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Registration</string>
+           </property>
+          </widget>
+          <widget class="QPushButton" name="pushButtonBck">
+           <property name="geometry">
+            <rect>
+             <x>210</x>
+             <y>310</y>
+             <width>80</width>
+             <height>24</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Back</string>
+           </property>
+          </widget>
+          <widget class="QWidget" name="">
+           <property name="geometry">
+            <rect>
+             <x>120</x>
+             <y>130</y>
+             <width>271</width>
+             <height>146</height>
+            </rect>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_3">
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>Sername</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QLineEdit" name="lineEditEmail"/>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_7">
+              <property name="text">
+               <string>Email</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="lineEditName"/>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLineEdit" name="lineEditPassword_2"/>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="lineEditSername"/>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>Name</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_6">
+              <property name="text">
+               <string>Password</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLineEdit" name="lineEditLogin_2"/>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_8">
+              <property name="text">
+               <string>Login</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
          <widget class="QWidget" name="pageCreateGroupChat">
           <layout class="QVBoxLayout" name="verticalLayout_8">
            <item>
