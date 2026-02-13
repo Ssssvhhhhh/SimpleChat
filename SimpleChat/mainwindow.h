@@ -5,6 +5,8 @@
 #include "userstatuswidget.h"
 
 #include <QMainWindow>
+#include <QMessageBox>
+
 #include <QTcpSocket>
 
 #include <QJsonArray>
@@ -13,6 +15,7 @@
 
 #include <QStandardItemModel>
 #include <QCloseEvent>
+#include <QTimer>
 
 #include <qtreewidget.h>
 
@@ -50,6 +53,7 @@ public:
     void changeUserStatus(int userId, QString status);
     void showAddButtonOnWidgets(bool& isShow);
     void sendRegistrationData();
+    void labelError(QLabel* errorLabel);
 
 private slots:
     void on_pushButtonOpenCloseTab_clicked();

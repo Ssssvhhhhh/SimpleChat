@@ -26,7 +26,10 @@ CustomWidget::CustomWidget(QWidget *parent,QTcpSocket* mainSocket, QString serve
 void CustomWidget::connectToCurrentServer(QTcpSocket* userSocket)
 {
     userSocket->connectToHost(serverStruct.serverIPS, serverStruct.serverPortS);
-    !userSocket->waitForConnected(3000) ? qDebug() << "[CLIENT] " << "Connection error": qDebug() << "[CLIENT] " << "Connection Succses";
+    if(!userSocket->waitForConnected(1500))
+    {
+        QMessageBox::warning(this, "Error", "Connection error");
+    }
 }
 
 CustomWidget::~CustomWidget()

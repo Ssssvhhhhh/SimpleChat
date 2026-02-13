@@ -12,12 +12,13 @@ MainWindow::MainWindow(QWidget *parent)
     connect(userSocket, &QTcpSocket::readyRead, this, &MainWindow::readServerResponse);
     //!userSocket->waitForConnected(3000) ? qDebug() << "[CLIENT] " << "Connection error": qDebug() << "[CLIENT] " << "Connection Succses";
     connect(userSocket, &QTcpSocket::connected, this, &MainWindow::openCloseServerUsers);
-    /*
-    ui->tableWidgetServers->setColumnCount(1);
-    ui->tableWidgetServers->setColumnWidth(0, 160);
-    ui->tableWidgetServers->verticalHeader()->hide();
-    ui->tableWidgetServers->horizontalHeader()->hide();
-    */
+
+    ui->labelError->hide();
+    ui->labelError_2->hide();
+    ui->labelError_3->hide();
+    ui->labelError_4->hide();
+
+
     ui->treeWidget->setColumnCount(1);
     ui->treeWidget->setHeaderHidden(true);
     ui->pushButtonCreateGroup->hide();
@@ -124,25 +125,37 @@ void MainWindow::readServerResponse()
 
 void MainWindow::addServer()
 {
-    QString serverName = ui->lineEditServerName->text();
-    QString serverIP = ui->lineEditServerIP->text();
-    QString serverPort = ui->lineEditServerPort->text();
+    QString serverName = ui->lineEditServerName->text().trimmed();
+    QString serverIP = ui->lineEditServerIP->text().trimmed();
+    QString serverPort = ui->lineEditServerPort->text().trimmed();
 
-
-    serverItem = new QTreeWidgetItem(ui->treeWidget);
-    serverWidget = new CustomWidget(nullptr, userSocket, serverName,serverIP,serverPort.toInt());
-    ui->treeWidget->setItemWidget(serverItem, 0, serverWidget);
+    if(!serverName.isEmpty() && !serverIP.isEmpty() && !serverPort.isEmpty())
+    {
+        serverItem = new QTreeWidgetItem(ui->treeWidget);
+        serverWidget = new CustomWidget(nullptr, userSocket, serverName,serverIP,serverPort.toInt());
+        ui->treeWidget->setItemWidget(serverItem, 0, serverWidget);
+    }
+    else
+    {
+        labelError(ui->labelError_4);
+    }
 }
 
 void MainWindow::sendAuthorizationData()
 {
-    QString login = ui->lineEditLogin->text();
-    QString password = ui->lineEditPassword->text();
+    QString login = ui->lineEditLogin->text().trimmed();
+    QString password = ui->lineEditPassword->text().trimmed();
 
-    QString authorizationData = "AUT|" + login + "|" + password;
-
-    userSocket->write(authorizationData.toUtf8());
-    userSocket->flush();
+    if(!login.isEmpty() && !password.isEmpty())
+    {
+        QString authorizationData = "AUT|" + login + "|" + password;
+        userSocket->write(authorizationData.toUtf8());
+        userSocket->flush();
+    }
+    else
+    {
+        labelError(ui->labelError);
+    }
 }
 
 void MainWindow::addUserFullNameInTab(const QString& usersFullName)
@@ -276,15 +289,25 @@ void MainWindow::addUserInGroup(int userId)
 
 void MainWindow::sendDataToCreateGroupChat(QList<int> usersIdsForGroup)
 {
-    QString GroupRequest = "CREATE|" + ui->lineEditGroupName->text() + "|";
-    GroupRequest.append("&"+ QString::number(userId));
-    for(int groupIter : usersIdsForGroup)
+    QString groupName = ui->lineEditGroupName->text().trimmed();
+
+    if(!groupName.isEmpty())
     {
-        GroupRequest.append("&");
-        GroupRequest.append(QString::number(groupIter));
+        QString GroupRequest = "CREATE|" + groupName + "|";
+        GroupRequest.append("&"+ QString::number(userId));
+        for(int groupIter : usersIdsForGroup)
+        {
+            GroupRequest.append("&");
+            GroupRequest.append(QString::number(groupIter));
+        }
+        userSocket->write(GroupRequest.toUtf8());
+        userSocket->flush();
     }
-    userSocket->write(GroupRequest.toUtf8());
-    userSocket->flush();
+    else
+    {
+        labelError(ui->labelError_3);
+    }
+
 }
 
 void MainWindow::changeUserStatus(int userId, QString status)
@@ -316,32 +339,46 @@ void MainWindow::showAddButtonOnWidgets(bool& isShow)
     {
         if(widgetIter->getType() == "group" )
             continue;
-
         if(!isShow)
         {
             widgetIter->showButton();
-            isAddButtonShow = false;
         }
         else
         {
             widgetIter->hideButton();
-            isAddButtonShow = true;
         }
-
     }
+
+    isAddButtonShow = !isAddButtonShow;
+
 }
 
 void MainWindow::sendRegistrationData()
 {
-    QString name = ui->lineEditName->text();
-    QString sername = ui->lineEditSername->text();
-    QString login = ui->lineEditLogin_2->text();
-    QString password = ui->lineEditPassword_2->text();
-    QString email = ui->lineEditEmail->text();
+    QString name = ui->lineEditName->text().trimmed();
+    QString sername = ui->lineEditSername->text().trimmed();
+    QString login = ui->lineEditLogin_2->text().trimmed();
+    QString password = ui->lineEditPassword_2->text().trimmed();
+    QString email = ui->lineEditEmail->text().trimmed();
 
-    QString registrationMessage = "REG|" + name + "|" + sername + "|" + login + "|"+ password + "|" + email;
-    userSocket->write(registrationMessage.toUtf8());
-    userSocket->flush();
+    if(!name.isEmpty() && !sername.isEmpty() && !login.isEmpty() && !password.isEmpty() && !email.isEmpty())
+    {
+        QString registrationMessage = "REG|" + name + "|" + sername + "|" + login + "|"+ password + "|" + email;
+        userSocket->write(registrationMessage.toUtf8());
+        userSocket->flush();
+    }
+    else
+    {
+        labelError(ui->labelError_2);
+    }
+
+
+}
+
+void MainWindow::labelError(QLabel *errorLabel)
+{
+    errorLabel->show();
+    QTimer::singleShot(2500, errorLabel, &QLabel::hide);
 }
 
 
@@ -392,6 +429,7 @@ void MainWindow::on_pushButtonSendGroupData_clicked()
 void MainWindow::on_pushButtonBackToChats_clicked()
 {
     ui->stackedWidget->setCurrentIndex(2);
+    showAddButtonOnWidgets(isAddButtonShow);
 }
 
 
