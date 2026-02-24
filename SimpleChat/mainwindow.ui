@@ -223,6 +223,9 @@ border-radius: 10px;    </string>
          </property>
          <widget class="QWidget" name="pageServerSettings">
           <layout class="QVBoxLayout" name="verticalLayout_6">
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
            <item>
             <widget class="QFrame" name="frameAddServer">
              <property name="styleSheet">
@@ -951,9 +954,16 @@ border-radius: 10px;</string>
             <number>0</number>
            </property>
            <item>
-            <widget class="QFrame" name="frame">
+            <widget class="QFrame" name="frameReg">
              <property name="styleSheet">
-              <string notr="true">background-color: rgb(214, 214, 214);</string>
+              <string notr="true">#frameReg
+{
+background-color: rgb(214, 214, 214);
+
+border-image: url(reg.png) 0 0 0 0 stretch stretch;
+}
+
+</string>
              </property>
              <property name="frameShape">
               <enum>QFrame::Shape::StyledPanel</enum>
@@ -984,9 +994,17 @@ border-radius: 10px;</string>
                  <layout class="QVBoxLayout" name="verticalLayout_14">
                   <item>
                    <widget class="QLabel" name="label_4">
+                    <property name="maximumSize">
+                     <size>
+                      <width>300</width>
+                      <height>30</height>
+                     </size>
+                    </property>
                     <property name="styleSheet">
                      <string notr="true">font: 18pt &quot;Segoe UI&quot;;
-color: rgb(97, 113, 100);</string>
+color: rgb(97, 113, 100);
+background-color: none;
+</string>
                     </property>
                     <property name="text">
                      <string>Name</string>
@@ -1001,17 +1019,35 @@ color: rgb(97, 113, 100);</string>
                       <height>30</height>
                      </size>
                     </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>300</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
                     <property name="styleSheet">
                      <string notr="true">background-color: rgb(97, 113, 100);
-border-radius: 10px;</string>
+border-radius: 10px;
+
+color: rgb(217, 217, 217);
+font: 12pt &quot;Segoe UI&quot;;
+padding-left: 10px;  
+</string>
                     </property>
                    </widget>
                   </item>
                   <item>
                    <widget class="QLabel" name="label_5">
+                    <property name="maximumSize">
+                     <size>
+                      <width>300</width>
+                      <height>30</height>
+                     </size>
+                    </property>
                     <property name="styleSheet">
                      <string notr="true">font: 18pt &quot;Segoe UI&quot;;
-color: rgb(97, 113, 100);</string>
+color: rgb(97, 113, 100);
+background-color: none;</string>
                     </property>
                     <property name="text">
                      <string>Sername</string>
@@ -1026,17 +1062,41 @@ color: rgb(97, 113, 100);</string>
                       <height>30</height>
                      </size>
                     </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>300</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
                     <property name="styleSheet">
                      <string notr="true">background-color: rgb(97, 113, 100);
-border-radius: 10px;</string>
+border-radius: 10px;
+
+color: rgb(217, 217, 217);
+font: 12pt &quot;Segoe UI&quot;;
+padding-left: 10px;  
+</string>
                     </property>
                    </widget>
                   </item>
                   <item>
                    <widget class="QLabel" name="label_8">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>35</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>300</width>
+                      <height>30</height>
+                     </size>
+                    </property>
                     <property name="styleSheet">
                      <string notr="true">font: 18pt &quot;Segoe UI&quot;;
-color: rgb(97, 113, 100);</string>
+color: rgb(97, 113, 100);
+background-color: none;</string>
                     </property>
                     <property name="text">
                      <string>Login</string>
@@ -1051,17 +1111,35 @@ color: rgb(97, 113, 100);</string>
                       <height>30</height>
                      </size>
                     </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>300</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
                     <property name="styleSheet">
                      <string notr="true">background-color: rgb(97, 113, 100);
-border-radius: 10px;</string>
+border-radius: 10px;
+
+color: rgb(217, 217, 217);
+font: 12pt &quot;Segoe UI&quot;;
+padding-left: 10px;  
+</string>
                     </property>
                    </widget>
                   </item>
                   <item>
                    <widget class="QLabel" name="label_6">
+                    <property name="maximumSize">
+                     <size>
+                      <width>300</width>
+                      <height>30</height>
+                     </size>
+                    </property>
                     <property name="styleSheet">
                      <string notr="true">font: 18pt &quot;Segoe UI&quot;;
-color: rgb(97, 113, 100);</string>
+color: rgb(97, 113, 100);
+background-color: none;</string>
                     </property>
                     <property name="text">
                      <string>Password</string>
@@ -1076,17 +1154,35 @@ color: rgb(97, 113, 100);</string>
                       <height>30</height>
                      </size>
                     </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>300</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
                     <property name="styleSheet">
                      <string notr="true">background-color: rgb(97, 113, 100);
-border-radius: 10px;</string>
+border-radius: 10px;
+
+color: rgb(217, 217, 217);
+font: 12pt &quot;Segoe UI&quot;;
+padding-left: 10px;  
+</string>
                     </property>
                    </widget>
                   </item>
                   <item>
                    <widget class="QLabel" name="label_7">
+                    <property name="maximumSize">
+                     <size>
+                      <width>300</width>
+                      <height>30</height>
+                     </size>
+                    </property>
                     <property name="styleSheet">
                      <string notr="true">font: 18pt &quot;Segoe UI&quot;;
-color: rgb(97, 113, 100);</string>
+color: rgb(97, 113, 100);
+background-color: none;</string>
                     </property>
                     <property name="text">
                      <string>Email</string>
@@ -1101,29 +1197,20 @@ color: rgb(97, 113, 100);</string>
                       <height>30</height>
                      </size>
                     </property>
-                    <property name="styleSheet">
-                     <string notr="true">background-color: rgb(97, 113, 100);
-border-radius: 10px;</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="labelError_2">
                     <property name="maximumSize">
                      <size>
-                      <width>16777215</width>
-                      <height>25</height>
+                      <width>300</width>
+                      <height>16777215</height>
                      </size>
                     </property>
                     <property name="styleSheet">
-                     <string notr="true">text-align: center;
-color: rgb(170, 0, 0);
-font: 12pt &quot;Segoe UI&quot;;
+                     <string notr="true">background-color: rgb(97, 113, 100);
+border-radius: 10px;
 
+color: rgb(217, 217, 217);
+font: 12pt &quot;Segoe UI&quot;;
+padding-left: 10px;  
 </string>
-                    </property>
-                    <property name="text">
-                     <string>ERROR</string>
                     </property>
                    </widget>
                   </item>
@@ -1135,7 +1222,7 @@ font: 12pt &quot;Segoe UI&quot;;
                    <enum>Qt::Orientation::Horizontal</enum>
                   </property>
                   <property name="sizeType">
-                   <enum>QSizePolicy::Policy::Fixed</enum>
+                   <enum>QSizePolicy::Policy::Preferred</enum>
                   </property>
                   <property name="sizeHint" stdset="0">
                    <size>
@@ -1146,6 +1233,26 @@ font: 12pt &quot;Segoe UI&quot;;
                  </spacer>
                 </item>
                </layout>
+              </item>
+              <item>
+               <widget class="QLabel" name="labelError_2">
+                <property name="maximumSize">
+                 <size>
+                  <width>300</width>
+                  <height>25</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">text-align: center;
+color: rgb(170, 0, 0);
+font: 12pt &quot;Segoe UI&quot;;
+background-color:none;
+</string>
+                </property>
+                <property name="text">
+                 <string>ERROR</string>
+                </property>
+               </widget>
               </item>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -1175,24 +1282,30 @@ font: 12pt &quot;Segoe UI&quot;;
                       <height>40</height>
                      </size>
                     </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>200</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
                     <property name="styleSheet">
                      <string notr="true">QPushButton {
 color: rgb(255, 255, 255);
 background-color: #617164;
-border: 1px solid #2f3a33;   
-border-radius: 10px;                    
+
+border-radius: 20px;                    
 }
 QPushButton:hover {
 color: rgb(255, 255, 255);
 background-color: #69816D;
-border: none;
-border-radius: 10px;                    
+
+border-radius: 20px;                    
 }
 QPushButton:pressed  {
 color: rgb(255, 255, 255);
 background-color: #3B433C;
 border: none;
-border-radius: 10px;                    
+border-radius: 20px;                    
 }</string>
                     </property>
                     <property name="text">
@@ -1208,24 +1321,30 @@ border-radius: 10px;
                       <height>40</height>
                      </size>
                     </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>200</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
                     <property name="styleSheet">
                      <string notr="true">QPushButton {
 color: rgb(255, 255, 255);
 background-color: #617164;
-border: 1px solid #2f3a33;   
-border-radius: 10px;                    
+
+border-radius: 20px;                    
 }
 QPushButton:hover {
 color: rgb(255, 255, 255);
 background-color: #69816D;
-border: none;
-border-radius: 10px;                    
+
+border-radius: 20px;                    
 }
 QPushButton:pressed  {
 color: rgb(255, 255, 255);
 background-color: #3B433C;
 border: none;
-border-radius: 10px;                    
+border-radius: 20px;                    
 }</string>
                     </property>
                     <property name="text">
@@ -1259,7 +1378,7 @@ border-radius: 10px;
           </layout>
          </widget>
          <widget class="QWidget" name="pageCreateGroupChat">
-          <layout class="QVBoxLayout" name="verticalLayout_8">
+          <layout class="QVBoxLayout" name="verticalLayout_13">
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_4">
              <item>
@@ -1278,12 +1397,16 @@ color: rgb(217, 217, 217);</string>
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>25</height>
+                 <height>40</height>
                 </size>
                </property>
                <property name="styleSheet">
                 <string notr="true">background-color: rgb(217, 217, 217);
-border-radius: 10px;</string>
+color: rgb(97, 113, 100);
+font: 12pt &quot;Segoe UI&quot;;
+border-radius: 20px;                  
+padding-left: 10px;  
+</string>
                </property>
               </widget>
              </item>
@@ -1311,70 +1434,120 @@ font: 12pt &quot;Segoe UI&quot;;
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButtonSendGroupData">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">QPushButton {
-color: rgb(255, 255, 255);
-background-color: #617164;
-border: 1px solid #2f3a33;   
+            <layout class="QHBoxLayout" name="horizontalLayout_11">
+             <item>
+              <spacer name="horizontalSpacer_14">
+               <property name="orientation">
+                <enum>Qt::Orientation::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Policy::Preferred</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>70</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout_8">
+               <item>
+                <widget class="QPushButton" name="pushButtonSendGroupData">
+                 <property name="minimumSize">
+                  <size>
+                   <width>300</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>400</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+background-color: rgb(217, 217, 217);
+	color: rgb(97, 113, 100);
 border-radius: 10px;                    
 }
 QPushButton:hover {
-color: rgb(255, 255, 255);
-background-color: #69816D;
+	color: rgb(97, 113, 100);
+background-color: #E4E4E4;
 border: none;
 border-radius: 10px;                    
 }
 QPushButton:pressed  {
-color: rgb(255, 255, 255);
-background-color: #3B433C;
+	color: rgb(97, 113, 100);
+background-color: #A4A4A4;
 border: none;
 border-radius: 10px;                    
 }</string>
-             </property>
-             <property name="text">
-              <string>Create</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButtonBackToChats">
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>25</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">QPushButton {
-color: rgb(255, 255, 255);
-background-color: #617164;
-border: 1px solid #2f3a33;   
+                 </property>
+                 <property name="text">
+                  <string>Create</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pushButtonBackToChats">
+                 <property name="minimumSize">
+                  <size>
+                   <width>300</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>400</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+background-color: rgb(217, 217, 217);
+	color: rgb(97, 113, 100);
 border-radius: 10px;                    
 }
 QPushButton:hover {
-color: rgb(255, 255, 255);
-background-color: #69816D;
+	color: rgb(97, 113, 100);
+background-color: #E4E4E4;
 border: none;
 border-radius: 10px;                    
 }
 QPushButton:pressed  {
-color: rgb(255, 255, 255);
-background-color: #3B433C;
+	color: rgb(97, 113, 100);
+background-color: #A4A4A4;
 border: none;
 border-radius: 10px;                    
 }</string>
-             </property>
-             <property name="text">
-              <string>Back</string>
-             </property>
-            </widget>
+                 </property>
+                 <property name="text">
+                  <string>Back</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_15">
+               <property name="orientation">
+                <enum>Qt::Orientation::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Policy::Preferred</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>70</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
            </item>
           </layout>
          </widget>
