@@ -210,14 +210,12 @@ border-radius: 10px;</string>
             </size>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(217, 217, 217);
+            <string notr="true">border-image: url(tab.png) 0 0 0 0 stretch stretch;
+background-color: rgb(217, 217, 217);
 border-radius: 10px;    </string>
            </property>
            <property name="text">
             <string/>
-           </property>
-           <property name="icon">
-            <iconset theme="QIcon::ThemeIcon::FormatJustifyCenter"/>
            </property>
           </widget>
          </item>
@@ -248,7 +246,7 @@ border-radius: 10px;    </string>
           <string notr="true"/>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="pageServerSettings">
           <layout class="QVBoxLayout" name="verticalLayout_6">
