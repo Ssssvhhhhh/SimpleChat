@@ -6,59 +6,94 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>135</width>
-    <height>38</height>
+    <width>147</width>
+    <height>58</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QPushButton" name="pushButton">
-     <property name="styleSheet">
-      <string notr="true">background-color: none;
-border: none;
-color: rgb(0, 0, 0);</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QRadioButton" name="radioButton">
+    <widget class="QFrame" name="frame">
      <property name="maximumSize">
       <size>
-       <width>20</width>
-       <height>16777215</height>
+       <width>16777215</width>
+       <height>37</height>
       </size>
      </property>
      <property name="styleSheet">
-      <string notr="true"/>
+      <string notr="true">background-color: rgb(105, 129, 109);</string>
      </property>
-     <property name="text">
-      <string/>
+     <property name="frameShape">
+      <enum>QFrame::Shape::StyledPanel</enum>
      </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="pushButtonAddInGroupChat">
-     <property name="enabled">
-      <bool>true</bool>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Raised</enum>
      </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset theme="QIcon::ThemeIcon::ContactNew"/>
-     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="styleSheet">
+         <string notr="true">QPushButton
+{
+background-color: none;
+border: none;
+	color: rgb(217, 217, 217);
+
+}
+
+QPushButton:hover {
+color: rgb(255, 255, 255);
+background-color: #69816D;
+border: none;
+border-radius: 20px;                    
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioButton">
+        <property name="maximumSize">
+         <size>
+          <width>20</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonAddInGroupChat">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="QIcon::ThemeIcon::ContactNew"/>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>

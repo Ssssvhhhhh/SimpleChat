@@ -6,16 +6,24 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>247</width>
-    <height>44</height>
+    <width>257</width>
+    <height>55</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <item>
     <widget class="QLabel" name="labelServerName">
+     <property name="styleSheet">
+      <string notr="true">font: 12pt &quot;Segoe UI&quot;;
+color: rgb(97, 113, 100);
+background-color: none</string>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -25,18 +33,37 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="pushButtonConnect">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">
+QPushButton {
+background-color: rgb(217, 217, 217);
+	color: rgb(97, 113, 100);
+border-radius: 10px;      
+font: 10pt &quot;Segoe UI&quot;;              
+}
+QPushButton:hover {
+	color: rgb(97, 113, 100);
+background-color: #E4E4E4;
+border: none;
+border-radius: 10px;    
+font: 10pt &quot;Segoe UI&quot;;                
+}
+QPushButton:pressed  {
+	color: rgb(97, 113, 100);
+background-color: #A4A4A4;
+border: none;
+border-radius: 10px;         
+font: 10pt &quot;Segoe UI&quot;;           
+}</string>
+       </property>
        <property name="text">
         <string>Connect</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButtonSettings">
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
        </property>
       </widget>
      </item>

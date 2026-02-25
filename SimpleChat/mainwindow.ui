@@ -51,6 +51,23 @@ border-radius: 10px;</string>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
         <widget class="QTreeWidget" name="treeWidget">
+         <property name="styleSheet">
+          <string notr="true">QTreeWidget::item:hover 
+{
+	background-color: none;
+	border-radius: 20px;    
+}
+QTreeWidget::item:selected 
+{
+	background-color: none;
+	border-radius: 20px;    
+}
+QTreeWidget::item:focus
+{
+    outline: 0px;
+}
+</string>
+         </property>
          <column>
           <property name="text">
            <string notr="true">1</string>
@@ -68,21 +85,27 @@ border-radius: 10px;</string>
          </property>
          <property name="styleSheet">
           <string notr="true">QPushButton {
-color: rgb(255, 255, 255);
+	color: rgb(214, 214, 214);
 background-color: #617164;
-
-border-radius: 20px;                    
+border: none;
+border-radius: 20px;               
+    
+	font: 15pt &quot;Showcard Gothic&quot;;
 }
 QPushButton:hover {
 color: rgb(255, 255, 255);
 background-color: #69816D;
-
-border-radius: 20px;                    
+border: none;
+border-radius: 20px;            
+	font: 15pt &quot;Showcard Gothic&quot;;
+        
 }
 QPushButton:pressed  {
 color: rgb(255, 255, 255);
 background-color: #3B433C;
 border: none;
+	font: 15pt &quot;Showcard Gothic&quot;;
+
 border-radius: 20px;                    
 }</string>
          </property>
@@ -104,21 +127,27 @@ border-radius: 20px;
          </property>
          <property name="styleSheet">
           <string notr="true">QPushButton {
-color: rgb(255, 255, 255);
+	color: rgb(214, 214, 214);
 background-color: #617164;
-
-border-radius: 20px;                    
+border: none;
+border-radius: 20px;               
+    
+	font: 15pt &quot;Showcard Gothic&quot;;
 }
 QPushButton:hover {
 color: rgb(255, 255, 255);
 background-color: #69816D;
-
-border-radius: 20px;                    
+border: none;
+border-radius: 20px;            
+	font: 15pt &quot;Showcard Gothic&quot;;
+        
 }
 QPushButton:pressed  {
 color: rgb(255, 255, 255);
 background-color: #3B433C;
 border: none;
+	font: 15pt &quot;Showcard Gothic&quot;;
+
 border-radius: 20px;                    
 }</string>
          </property>
@@ -280,7 +309,7 @@ border-image: url(server.png) 0 0 0 0 stretch stretch;
                      </size>
                     </property>
                     <property name="styleSheet">
-                     <string notr="true">font: 18pt &quot;Segoe UI&quot;;
+                     <string notr="true">font: 18pt &quot;Showcard Gothic&quot;;
 color: rgb(97, 113, 100);
 background-color: none;</string>
                     </property>
@@ -331,7 +360,7 @@ padding-left: 10px;
                      </size>
                     </property>
                     <property name="styleSheet">
-                     <string notr="true">font: 18pt &quot;Segoe UI&quot;;
+                     <string notr="true">font: 18pt &quot;Showcard Gothic&quot;;
 color: rgb(97, 113, 100);
 background-color: none;</string>
                     </property>
@@ -382,7 +411,7 @@ padding-left: 10px;
                      </size>
                     </property>
                     <property name="styleSheet">
-                     <string notr="true">font: 18pt &quot;Segoe UI&quot;;
+                     <string notr="true">font: 18pt &quot;Showcard Gothic&quot;;
 color: rgb(97, 113, 100);
 background-color: none;</string>
                     </property>
@@ -472,6 +501,9 @@ background-color: none;
                 </item>
                 <item>
                  <layout class="QVBoxLayout" name="verticalLayout_7">
+                  <property name="spacing">
+                   <number>6</number>
+                  </property>
                   <item>
                    <widget class="QPushButton" name="pushButton">
                     <property name="minimumSize">
@@ -488,21 +520,27 @@ background-color: none;
                     </property>
                     <property name="styleSheet">
                      <string notr="true">QPushButton {
-color: rgb(255, 255, 255);
+	color: rgb(214, 214, 214);
 background-color: #617164;
 border: none;
-border-radius: 20px;                    
+border-radius: 20px;               
+    
+	font: 15pt &quot;Showcard Gothic&quot;;
 }
 QPushButton:hover {
 color: rgb(255, 255, 255);
 background-color: #69816D;
 border: none;
-border-radius: 20px;                    
+border-radius: 20px;            
+	font: 15pt &quot;Showcard Gothic&quot;;
+        
 }
 QPushButton:pressed  {
 color: rgb(255, 255, 255);
 background-color: #3B433C;
 border: none;
+	font: 15pt &quot;Showcard Gothic&quot;;
+
 border-radius: 20px;                    
 }</string>
                     </property>
@@ -527,21 +565,27 @@ border-radius: 20px;
                     </property>
                     <property name="styleSheet">
                      <string notr="true">QPushButton {
-color: rgb(255, 255, 255);
+	color: rgb(214, 214, 214);
 background-color: #617164;
 border: none;
-border-radius: 20px;                    
+border-radius: 20px;               
+    
+	font: 15pt &quot;Showcard Gothic&quot;;
 }
 QPushButton:hover {
 color: rgb(255, 255, 255);
 background-color: #69816D;
 border: none;
-border-radius: 20px;                    
+border-radius: 20px;            
+	font: 15pt &quot;Showcard Gothic&quot;;
+        
 }
 QPushButton:pressed  {
 color: rgb(255, 255, 255);
 background-color: #3B433C;
 border: none;
+	font: 15pt &quot;Showcard Gothic&quot;;
+
 border-radius: 20px;                    
 }</string>
                     </property>
@@ -618,7 +662,7 @@ border-image: url(autPage.png) 0 0 0 0 stretch stretch;
                  </size>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">font: 30pt &quot;Segoe UI&quot;;
+                 <string notr="true">font: 30pt &quot;Showcard Gothic&quot;;
 color: rgb(97, 113, 100);
 background-color: none</string>
                 </property>
@@ -659,7 +703,7 @@ background-color: none</string>
                      </size>
                     </property>
                     <property name="styleSheet">
-                     <string notr="true">font: 18pt &quot;Segoe UI&quot;;
+                     <string notr="true">font: 18pt &quot;Showcard Gothic&quot;;
 color: rgb(97, 113, 100);
 background-color: none;</string>
                     </property>
@@ -701,7 +745,7 @@ padding-left: 10px;
                      </size>
                     </property>
                     <property name="styleSheet">
-                     <string notr="true">font: 18pt &quot;Segoe UI&quot;;
+                     <string notr="true">font: 18pt &quot;Showcard Gothic&quot;;
 color: rgb(97, 113, 100);
 background-color: none;</string>
                     </property>
@@ -810,21 +854,27 @@ background-color: none;
                     </property>
                     <property name="styleSheet">
                      <string notr="true">QPushButton {
-color: rgb(255, 255, 255);
+	color: rgb(214, 214, 214);
 background-color: #617164;
 border: none;
-border-radius: 20px;                    
+border-radius: 20px;               
+    
+	font: 15pt &quot;Showcard Gothic&quot;;
 }
 QPushButton:hover {
 color: rgb(255, 255, 255);
 background-color: #69816D;
 border: none;
-border-radius: 20px;                    
+border-radius: 20px;            
+	font: 15pt &quot;Showcard Gothic&quot;;
+        
 }
 QPushButton:pressed  {
 color: rgb(255, 255, 255);
 background-color: #3B433C;
 border: none;
+	font: 15pt &quot;Showcard Gothic&quot;;
+
 border-radius: 20px;                    
 }</string>
                     </property>
@@ -849,21 +899,27 @@ border-radius: 20px;
                     </property>
                     <property name="styleSheet">
                      <string notr="true">QPushButton {
-color: rgb(255, 255, 255);
+	color: rgb(214, 214, 214);
 background-color: #617164;
 border: none;
-border-radius: 20px;                    
+border-radius: 20px;               
+    
+	font: 15pt &quot;Showcard Gothic&quot;;
 }
 QPushButton:hover {
 color: rgb(255, 255, 255);
 background-color: #69816D;
 border: none;
-border-radius: 20px;                    
+border-radius: 20px;            
+	font: 15pt &quot;Showcard Gothic&quot;;
+        
 }
 QPushButton:pressed  {
 color: rgb(255, 255, 255);
 background-color: #3B433C;
 border: none;
+	font: 15pt &quot;Showcard Gothic&quot;;
+
 border-radius: 20px;                    
 }</string>
                     </property>
@@ -906,7 +962,9 @@ border-radius: 20px;
             <widget class="QTextBrowser" name="textBrowserChat">
              <property name="styleSheet">
               <string notr="true">background-color: rgb(217, 217, 217);
-border-radius: 10px;</string>
+border-radius: 10px;
+color: rgb(97, 113, 100);
+font: 14pt &quot;Segoe UI&quot;;</string>
              </property>
             </widget>
            </item>
@@ -1001,7 +1059,7 @@ border-image: url(reg.png) 0 0 0 0 stretch stretch;
                      </size>
                     </property>
                     <property name="styleSheet">
-                     <string notr="true">font: 18pt &quot;Segoe UI&quot;;
+                     <string notr="true">font: 18pt &quot;Showcard Gothic&quot;;
 color: rgb(97, 113, 100);
 background-color: none;
 </string>
@@ -1045,9 +1103,10 @@ padding-left: 10px;
                      </size>
                     </property>
                     <property name="styleSheet">
-                     <string notr="true">font: 18pt &quot;Segoe UI&quot;;
+                     <string notr="true">font: 18pt &quot;Showcard Gothic&quot;;
 color: rgb(97, 113, 100);
-background-color: none;</string>
+background-color: none;
+</string>
                     </property>
                     <property name="text">
                      <string>Sername</string>
@@ -1094,9 +1153,10 @@ padding-left: 10px;
                      </size>
                     </property>
                     <property name="styleSheet">
-                     <string notr="true">font: 18pt &quot;Segoe UI&quot;;
+                     <string notr="true">font: 18pt &quot;Showcard Gothic&quot;;
 color: rgb(97, 113, 100);
-background-color: none;</string>
+background-color: none;
+</string>
                     </property>
                     <property name="text">
                      <string>Login</string>
@@ -1137,9 +1197,10 @@ padding-left: 10px;
                      </size>
                     </property>
                     <property name="styleSheet">
-                     <string notr="true">font: 18pt &quot;Segoe UI&quot;;
+                     <string notr="true">font: 18pt &quot;Showcard Gothic&quot;;
 color: rgb(97, 113, 100);
-background-color: none;</string>
+background-color: none;
+</string>
                     </property>
                     <property name="text">
                      <string>Password</string>
@@ -1180,9 +1241,10 @@ padding-left: 10px;
                      </size>
                     </property>
                     <property name="styleSheet">
-                     <string notr="true">font: 18pt &quot;Segoe UI&quot;;
+                     <string notr="true">font: 18pt &quot;Showcard Gothic&quot;;
 color: rgb(97, 113, 100);
-background-color: none;</string>
+background-color: none;
+</string>
                     </property>
                     <property name="text">
                      <string>Email</string>
@@ -1290,21 +1352,27 @@ background-color:none;
                     </property>
                     <property name="styleSheet">
                      <string notr="true">QPushButton {
-color: rgb(255, 255, 255);
+	color: rgb(214, 214, 214);
 background-color: #617164;
-
-border-radius: 20px;                    
+border: none;
+border-radius: 20px;               
+    
+	font: 15pt &quot;Showcard Gothic&quot;;
 }
 QPushButton:hover {
 color: rgb(255, 255, 255);
 background-color: #69816D;
-
-border-radius: 20px;                    
+border: none;
+border-radius: 20px;            
+	font: 15pt &quot;Showcard Gothic&quot;;
+        
 }
 QPushButton:pressed  {
 color: rgb(255, 255, 255);
 background-color: #3B433C;
 border: none;
+	font: 15pt &quot;Showcard Gothic&quot;;
+
 border-radius: 20px;                    
 }</string>
                     </property>
@@ -1329,21 +1397,27 @@ border-radius: 20px;
                     </property>
                     <property name="styleSheet">
                      <string notr="true">QPushButton {
-color: rgb(255, 255, 255);
+	color: rgb(214, 214, 214);
 background-color: #617164;
-
-border-radius: 20px;                    
+border: none;
+border-radius: 20px;               
+    
+	font: 15pt &quot;Showcard Gothic&quot;;
 }
 QPushButton:hover {
 color: rgb(255, 255, 255);
 background-color: #69816D;
-
-border-radius: 20px;                    
+border: none;
+border-radius: 20px;            
+	font: 15pt &quot;Showcard Gothic&quot;;
+        
 }
 QPushButton:pressed  {
 color: rgb(255, 255, 255);
 background-color: #3B433C;
 border: none;
+	font: 15pt &quot;Showcard Gothic&quot;;
+
 border-radius: 20px;                    
 }</string>
                     </property>
@@ -1384,7 +1458,7 @@ border-radius: 20px;
              <item>
               <widget class="QLabel" name="label_3">
                <property name="styleSheet">
-                <string notr="true">font: 18pt &quot;Segoe UI&quot;;
+                <string notr="true">font: 18pt &quot;Showcard Gothic&quot;;
 color: rgb(217, 217, 217);</string>
                </property>
                <property name="text">
@@ -1471,19 +1545,22 @@ font: 12pt &quot;Segoe UI&quot;;
                   <string notr="true">QPushButton {
 background-color: rgb(217, 217, 217);
 	color: rgb(97, 113, 100);
-border-radius: 10px;                    
+border-radius: 10px;           
+font: 15pt &quot;Showcard Gothic&quot;;         
 }
 QPushButton:hover {
 	color: rgb(97, 113, 100);
 background-color: #E4E4E4;
 border: none;
-border-radius: 10px;                    
+border-radius: 10px;     
+font: 15pt &quot;Showcard Gothic&quot;;               
 }
 QPushButton:pressed  {
 	color: rgb(97, 113, 100);
 background-color: #A4A4A4;
 border: none;
-border-radius: 10px;                    
+border-radius: 10px;           
+font: 15pt &quot;Showcard Gothic&quot;;         
 }</string>
                  </property>
                  <property name="text">
@@ -1509,19 +1586,22 @@ border-radius: 10px;
                   <string notr="true">QPushButton {
 background-color: rgb(217, 217, 217);
 	color: rgb(97, 113, 100);
-border-radius: 10px;                    
+border-radius: 10px;           
+font: 15pt &quot;Showcard Gothic&quot;;         
 }
 QPushButton:hover {
 	color: rgb(97, 113, 100);
 background-color: #E4E4E4;
 border: none;
-border-radius: 10px;                    
+border-radius: 10px;     
+font: 15pt &quot;Showcard Gothic&quot;;               
 }
 QPushButton:pressed  {
 	color: rgb(97, 113, 100);
 background-color: #A4A4A4;
 border: none;
-border-radius: 10px;                    
+border-radius: 10px;           
+font: 15pt &quot;Showcard Gothic&quot;;         
 }</string>
                  </property>
                  <property name="text">

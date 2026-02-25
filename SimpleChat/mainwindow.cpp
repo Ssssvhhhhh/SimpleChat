@@ -24,7 +24,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pushButtonCreateGroup->hide();
     ui->tableWidgetGroup->setColumnCount(1);
     ui->tableWidgetGroup->horizontalHeader()->hide();
-
+    ui->treeWidget->setFocusPolicy(Qt::NoFocus);
+    setWindowTitle("Simple Chat");
 }
 
 MainWindow::~MainWindow()
@@ -50,7 +51,7 @@ void MainWindow::opencloseTab()
 
 void MainWindow::openServerCreationSettings()
 {
-    ui->stackedWidget->setCurrentIndex(1);
+    ui->stackedWidget->setCurrentIndex(0);
 }
 
 void MainWindow::openCloseServerUsers()
