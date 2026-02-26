@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(userSocket, &QTcpSocket::readyRead, this, &MainWindow::readServerResponse);
     //!userSocket->waitForConnected(3000) ? qDebug() << "[CLIENT] " << "Connection error": qDebug() << "[CLIENT] " << "Connection Succses";
-    //connect(userSocket, &QTcpSocket::connected, this, &MainWindow::openCloseServerUsers);
+    connect(userSocket, &QTcpSocket::connected, this, &MainWindow::showConnectionLabel);
 
     ui->labelError->hide();
     ui->labelError_2->hide();
@@ -383,6 +383,13 @@ void MainWindow::labelError(QLabel *errorLabel)
     QTimer::singleShot(2500, errorLabel, &QLabel::hide);
 }
 
+void MainWindow::showConnectionLabel()
+{
+    ui->labelError_4->setText("Successful connection");
+    labelError(ui->labelError_4);
+    //ui->labelError_4->setText("ERROR");
+}
+
 
 
 void MainWindow::on_pushButtonOpenCloseTab_clicked()
@@ -397,7 +404,7 @@ void MainWindow::on_pushButtonAddServer_clicked()
 
 void MainWindow::on_pushButtonBack_clicked()
 {
-    isAuthorized ? ui->stackedWidget->setCurrentIndex(2) : ui->stackedWidget->setCurrentIndex(1); // fix for not authorized user!!! add connect status
+    isAuthorized ? ui->stackedWidget->setCurrentIndex(2) : ui->stackedWidget->setCurrentIndex(1);
 
 }
 

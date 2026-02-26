@@ -442,6 +442,12 @@ padding-left: 10px;
                   </item>
                   <item>
                    <widget class="QLabel" name="labelError_4">
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>30</height>
+                     </size>
+                    </property>
                     <property name="styleSheet">
                      <string notr="true">text-align: center;
 color: rgb(170, 0, 0);

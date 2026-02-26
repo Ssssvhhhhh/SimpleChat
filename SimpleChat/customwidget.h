@@ -24,9 +24,8 @@ class CustomWidget : public QWidget
 public:
     explicit CustomWidget(QWidget *parent = nullptr);
     CustomWidget(QWidget *parent, QTcpSocket* mainSocket, QString serverName, QString serverIP, int serverPort);
-    void connectToCurrentServer(QTcpSocket* userSocket);
     ~CustomWidget();
-
+    void connectToCurrentServer(QTcpSocket* userSocket);
 
 
 private slots:

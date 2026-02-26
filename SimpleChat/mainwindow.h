@@ -46,7 +46,7 @@ public:
     void onChatTypeRecevide(QString type);
     void getAllMessagesInGroupChat(int chatId);
     void getAllMessagesInChat(int senderId, int reciverId);
-    void loadChatMessages(const QString& chatMessages); // может не const QString& chatMessages?
+    void loadChatMessages(const QString& chatMessages);
     void loadGroupChatMessages(const QString& groupMessages);
     void addUserInGroup(int userId);
     void sendDataToCreateGroupChat(QList<int> usersIdsForGroup);
@@ -54,7 +54,7 @@ public:
     void showAddButtonOnWidgets(bool& isShow);
     void sendRegistrationData();
     void labelError(QLabel* errorLabel);
-
+    void showConnectionLabel();
 private slots:
     void on_pushButtonOpenCloseTab_clicked();
     void on_pushButtonAddServer_clicked();
@@ -65,13 +65,9 @@ private slots:
     void on_pushButtonCreateGroup_clicked();
     void on_pushButtonSendGroupData_clicked();
     void on_pushButtonBackToChats_clicked();
-
     void closeEvent(QCloseEvent* event); // For test delete later
-
     void on_pushButtonReg_clicked();
-
     void on_pushButtonSignUp_clicked();
-
     void on_pushButtonBck_clicked();
 
 private:
