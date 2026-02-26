@@ -615,6 +615,9 @@ border-radius: 20px;
          </widget>
          <widget class="QWidget" name="pageAuthorization">
           <layout class="QVBoxLayout" name="verticalLayout_11">
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
            <item>
             <widget class="QFrame" name="frameAuthorization">
              <property name="maximumSize">
@@ -627,7 +630,7 @@ border-radius: 20px;
               <string notr="true">#frameAuthorization
 {
 background-color: rgb(214, 214, 214);
-border-image: url(autPage.png) 0 0 0 0 stretch stretch;
+border-image: url(images/autPage.png) 0 0 0 0 stretch stretch;
 }
 </string>
              </property>
@@ -1014,7 +1017,7 @@ font: 14pt &quot;Segoe UI&quot;;</string>
 {
 background-color: rgb(214, 214, 214);
 
-border-image: url(reg.png) 0 0 0 0 stretch stretch;
+border-image: url(images/reg.png) 0 0 0 0 stretch stretch;
 }
 
 </string>
