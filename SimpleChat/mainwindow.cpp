@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(userSocket, &QTcpSocket::readyRead, this, &MainWindow::readServerResponse);
     //!userSocket->waitForConnected(3000) ? qDebug() << "[CLIENT] " << "Connection error": qDebug() << "[CLIENT] " << "Connection Succses";
-    connect(userSocket, &QTcpSocket::connected, this, &MainWindow::openCloseServerUsers);
+    //connect(userSocket, &QTcpSocket::connected, this, &MainWindow::openCloseServerUsers);
 
     ui->labelError->hide();
     ui->labelError_2->hide();
@@ -54,11 +54,12 @@ void MainWindow::openServerCreationSettings()
     ui->stackedWidget->setCurrentIndex(0);
 }
 
+/*
 void MainWindow::openCloseServerUsers()
 {
     //ui->stackedWidgetTab->setCurrentIndex(1);
 }
-
+*/
 void MainWindow::readServerResponse()
 {
     QByteArray responseServerData = userSocket->readAll();
@@ -72,7 +73,7 @@ void MainWindow::readServerResponse()
             ui->stackedWidget->setCurrentIndex(2);
             ui->pushButtonCreateGroup->show();
             userId = splitedDataFromServer[2].toInt();
-
+            isAuthorized = true;
             addUserFullNameInTab(splitedDataFromServer[4]);
 
             qDebug() << "[Client] " << "user id" << userId;
@@ -397,6 +398,7 @@ void MainWindow::on_pushButtonAddServer_clicked()
 void MainWindow::on_pushButtonBack_clicked()
 {
     isAuthorized ? ui->stackedWidget->setCurrentIndex(2) : ui->stackedWidget->setCurrentIndex(1); // fix for not authorized user!!! add connect status
+
 }
 
 void MainWindow::on_pushButtonSend_clicked()
