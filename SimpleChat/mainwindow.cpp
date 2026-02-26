@@ -18,14 +18,16 @@ MainWindow::MainWindow(QWidget *parent)
     ui->labelError_3->hide();
     ui->labelError_4->hide();
 
-
     ui->treeWidget->setColumnCount(1);
     ui->treeWidget->setHeaderHidden(true);
     ui->pushButtonCreateGroup->hide();
     ui->tableWidgetGroup->setColumnCount(1);
     ui->tableWidgetGroup->horizontalHeader()->hide();
     ui->treeWidget->setFocusPolicy(Qt::NoFocus);
+
     setWindowTitle("Simple Chat");
+    setWindowIcon(QIcon("images/appIcon.png"));
+
 }
 
 MainWindow::~MainWindow()
