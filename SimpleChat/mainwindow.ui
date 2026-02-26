@@ -242,7 +242,7 @@ border-radius: 10px;    </string>
           <string notr="true"/>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="pageServerSettings">
           <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -254,7 +254,6 @@ border-radius: 10px;    </string>
              <property name="styleSheet">
               <string notr="true">#frameAddServer
 {
-background-color: rgb(214, 214, 214);
 
 border-image: url(images/server.png) 0 0 0 0 stretch stretch;
 }
@@ -629,7 +628,6 @@ border-radius: 20px;
              <property name="styleSheet">
               <string notr="true">#frameAuthorization
 {
-background-color: rgb(214, 214, 214);
 border-image: url(images/autPage.png) 0 0 0 0 stretch stretch;
 }
 </string>
@@ -1015,7 +1013,6 @@ font: 14pt &quot;Segoe UI&quot;;</string>
              <property name="styleSheet">
               <string notr="true">#frameReg
 {
-background-color: rgb(214, 214, 214);
 
 border-image: url(images/reg.png) 0 0 0 0 stretch stretch;
 }
