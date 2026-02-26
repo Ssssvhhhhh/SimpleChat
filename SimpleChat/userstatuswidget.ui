@@ -85,11 +85,12 @@ border-radius: 20px;
           <height>20</height>
          </size>
         </property>
+        <property name="styleSheet">
+         <string notr="true">        qproperty-icon: url(images/usergr.png);
+    qproperty-iconSize: 24px 24px;</string>
+        </property>
         <property name="text">
          <string/>
-        </property>
-        <property name="icon">
-         <iconset theme="QIcon::ThemeIcon::ContactNew"/>
         </property>
        </widget>
       </item>

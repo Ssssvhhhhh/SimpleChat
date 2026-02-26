@@ -396,7 +396,7 @@ void MainWindow::on_pushButtonAddServer_clicked()
 
 void MainWindow::on_pushButtonBack_clicked()
 {
-    isAuthorized ? ui->stackedWidget->setCurrentIndex(2) : ui->stackedWidget->setCurrentIndex(1);
+    isAuthorized ? ui->stackedWidget->setCurrentIndex(2) : ui->stackedWidget->setCurrentIndex(1); // fix for not authorized user!!! add connect status
 }
 
 void MainWindow::on_pushButtonSend_clicked()
