@@ -242,7 +242,7 @@ border-radius: 10px;    </string>
           <string notr="true"/>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="pageServerSettings">
           <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -980,7 +980,10 @@ font: 14pt &quot;Segoe UI&quot;;</string>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(217, 217, 217);</string>
+                <string notr="true">background-color: rgb(217, 217, 217);
+font: 14pt &quot;Segoe UI&quot;;
+color: rgb(97, 113, 100);
+padding-left: 10px;  </string>
                </property>
               </widget>
              </item>
