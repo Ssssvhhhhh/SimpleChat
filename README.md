@@ -1,6 +1,5 @@
 # SimpleChat
 Simple Chat is a messaging app that allows you to create your own dedicated servers for private communication, manage participants, and enjoy complete data autonomy. All you need is a dedicated IP address.
-
 # Application features
 - User authentication
 - Creating a dedicated server
@@ -15,6 +14,16 @@ Simple Chat is a messaging app that allows you to create your own dedicated serv
 - SQLite
 
 # Screenshots
+<table>
+<tr>
+<td><img src="https://github.com/Ssssvhhhhh/SimpleChat/blob/main/README-Images/serverSettingsWindow.png?raw=true "alt="Screenshot 0" width="350"></td>
+<td><img src="https://github.com/Ssssvhhhhh/SimpleChat/blob/main/README-Images/authorizationWindow.png?raw=true" alt="Screenshot 1" width="350"></td>
+<td><img src="https://github.com/Ssssvhhhhh/SimpleChat/blob/main/README-Images/chat.png?raw=true" alt="Screenshot 2" width="350"></td>
+<td><img src="https://github.com/Ssssvhhhhh/SimpleChat/blob/main/README-Images/groupCreation.png?raw=true" alt="Screenshot 2" width="350"></td>
+</tr>
+</table>
+
+
 
 # Roadmap
 - RSA encryption
@@ -24,7 +33,7 @@ Simple Chat is a messaging app that allows you to create your own dedicated serv
 - Voice chat
 
 # License
-
+[License](https://github.com/Ssssvhhhhh/SimpleChat/blob/main/LICENSE)
 # Author
 - GitHub: https://github.com/Ssssvhhhhh
 - Email: babutinvladimirsh@gmail.com
