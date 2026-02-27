@@ -1,5 +1,6 @@
-# SimpleChat
-Simple Chat is a messaging app that allows you to create your own dedicated servers for private communication, manage participants, and enjoy complete data autonomy. All you need is a dedicated IP address.
+#  SimpleChat <img src="https://github.com/Ssssvhhhhh/SimpleChat/blob/main/README-Images/appIcon.png?raw=true" alt="appicon" width="28" height = "28">
+
+Simple Chat is a messaging app that allows you to create your own dedicated servers for private communication, manage participants, and enjoy complete data autonomy. All you need is a dedicated IP address.  The application is under development. Features may change and bugs may occur.
 # Application features
 - User authentication
 - Creating a dedicated server
