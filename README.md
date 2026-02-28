@@ -27,7 +27,7 @@ Simple Chat is a messaging app that allows you to create your own dedicated serv
 
 
 # Roadmap
-- RSA encryption
+- encryption
 - Ability to send media files
 - Mobile application
 - Push notification
