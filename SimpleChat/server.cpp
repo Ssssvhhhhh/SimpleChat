@@ -3,26 +3,66 @@
 Server::Server(QObject* parent, int port) : QTcpServer(parent)
 {
     qDebug() << "[Sever]" << "started";
-    listen(QHostAddress::Any, port);
+    QFile certFile("server.crt");
+    QFile keyFile("server.key");
+
+    if (!certFile.open(QIODevice::ReadOnly))
+        qFatal("Cannot open server.crt");
+
+    if (!keyFile.open(QIODevice::ReadOnly))
+        qFatal("Cannot open server.key");
+
+    server_cert = QSslCertificate(certFile.readAll(), QSsl::Pem);
+    server_key  = QSslKey(keyFile.readAll(), QSsl::Rsa, QSsl::Pem);
+
+    if (server_cert.isNull() || server_key.isNull())
+        qFatal("Certificate or key is null");
+
+    qDebug() << "Certificate loaded OK";
+    listen(QHostAddress::Any, 1234);
 
     UserBase = new UserDataBase();
 }
 
 void Server::incomingConnection(qintptr socketDescriptor)
 {
-    QTcpSocket* userSocket = new QTcpSocket(this);
-    userSocket->setSocketDescriptor(socketDescriptor);
-    userSockets.insert(userSocket);
-    connect(userSocket, &QTcpSocket::readyRead,this, &Server::readClientData);
-    connect(userSocket, &QTcpSocket::disconnected,this, &Server::userDisconected);
+
+    QSslSocket *userSocket = new QSslSocket(this);
+
+    if (!userSocket->setSocketDescriptor(socketDescriptor)) {
+        userSocket->deleteLater();
+        return;
+    }
+
+    connect(userSocket, &QSslSocket::encryptedBytesWritten, this, [](qint64 bytes){
+        qDebug() << "Encrypted bytes sent:" << bytes;
+    });
+
+    userSocket->setLocalCertificate(server_cert);
+    userSocket->setPrivateKey(server_key);
+    userSocket->setPeerVerifyMode(QSslSocket::VerifyNone);
+
+    connect(userSocket, &QSslSocket::encrypted, this, [userSocket]() {
+        qDebug() << "[Server] SSL handshake complete";
+    });
+
+    connect(userSocket, &QSslSocket::readyRead,this, &Server::readClientData);
 
 
-    qDebug() << "[Server] " << userSocket << " connected";
+    connect(userSocket, &QSslSocket::sslErrors,
+            userSocket, [userSocket](const QList<QSslError>&){
+                userSocket->ignoreSslErrors();
+            });
+
+    connect(userSocket, &QSslSocket::disconnected,this, &Server::userDisconected);
+
+    userSocket->startServerEncryption();
+    qDebug() << "[Server]" << userSocket << "connected";
 }
 
 void Server::userDisconected()
 {
-    QTcpSocket *userSocketSender = qobject_cast<QTcpSocket*>(sender());
+    QSslSocket *userSocketSender = qobject_cast<QSslSocket*>(sender());
     userSockets.remove(userSocketSender);
     userSocketSender->deleteLater();
     onlineUsersIds[authorizedUsers[userSocketSender]] = "offline";
@@ -37,7 +77,7 @@ void Server::userDisconected()
 
 void Server::readClientData()
 {
-    QTcpSocket *userSenderSocket = qobject_cast<QTcpSocket*>(sender());
+    QSslSocket *userSenderSocket = qobject_cast<QSslSocket*>(sender());
 
     if (!userSenderSocket) return;
 
@@ -59,8 +99,8 @@ void Server::readClientData()
             sendAuthMessage(userSenderSocket, userId, true);
             authorizedUsers[userSenderSocket] = userId.toInt();
             onlineUsersIds[userId.toInt()] = "online";
-            sendUserFullName(userSenderSocket);
-            sendUserStatus(userId.toInt());
+            //sendUserFullName(userSenderSocket);
+            //sendUserStatus(userId.toInt());
         }
         else
         {
@@ -137,7 +177,7 @@ void Server::broadcastPrivateMessage(int senderId, int reciverId,QString message
     for(auto socketIter = authorizedUsers.begin(); socketIter != authorizedUsers.end(); ++socketIter )
     {
         int userId = socketIter.value();
-        QTcpSocket* socket = socketIter.key();
+        QSslSocket* socket = socketIter.key();
 
         if(userId != reciverId)
             continue;
@@ -158,7 +198,7 @@ void Server::broadcastGroupMessage(int senderId, int chatId, const QString &text
     for(auto socketIter = authorizedUsers.begin(); socketIter != authorizedUsers.end(); ++socketIter )
     {
         int userId = socketIter.value();
-        QTcpSocket* socket = socketIter.key();
+        QSslSocket* socket = socketIter.key();
 
         if(!chatUsers.contains(userId) || senderId == userId)
             continue;
@@ -177,7 +217,7 @@ void Server::broadcastNewGroupChat(int chatId, const QString &chatName, const QL
     for(auto socketIter = authorizedUsers.begin(); socketIter != authorizedUsers.end(); ++socketIter )
     {
         int userId = socketIter.value();
-        QTcpSocket* socket = socketIter.key();
+        QSslSocket* socket = socketIter.key();
 
         if(!userIds.contains(userId))
             continue;
@@ -187,12 +227,16 @@ void Server::broadcastNewGroupChat(int chatId, const QString &chatName, const QL
     }
 }
 
-void Server::sendAuthMessage(QTcpSocket* userAutSocket,QString userId, bool isAauthenticated)
+void Server::sendAuthMessage(QSslSocket* userAutSocket,QString userId, bool isAauthenticated)
 {
     QString autMessage = "AUT|";
+
+    /*
     if(isAauthenticated)
     {
         autMessage += "Success|" + userId;
+        //QString fullNameIdentifier = "|FullName|";
+
         userAutSocket->write(autMessage.toUtf8());
         userAutSocket->flush();
     }
@@ -201,14 +245,33 @@ void Server::sendAuthMessage(QTcpSocket* userAutSocket,QString userId, bool isAa
         autMessage+="Error";
         userAutSocket->write(autMessage.toUtf8());
         userAutSocket->flush();
-
     }
+*/
+
+
+
+    if(isAauthenticated)
+    {
+        autMessage += "Success|" + userId + "|FullName|";
+        //QString fullNameIdentifier = "|FullName|";
+        userAutSocket->write(autMessage.toUtf8() + UserBase->userDataForSending(authorizedUsers[userAutSocket], onlineUsersIds));
+        userAutSocket->flush();
+        sendUserFullName(userAutSocket);
+    }
+    else
+    {
+        autMessage+="Error";
+        userAutSocket->write(autMessage.toUtf8());
+        userAutSocket->flush();
+    }
+
+
 }
 
-void Server::sendUserFullName(QTcpSocket* userFullNameSocket)
+void Server::sendUserFullName(QSslSocket* userFullNameSocket)
 {
     QString fullNameIdentifier = "|FullName|";
-    userFullNameSocket->write(fullNameIdentifier.toUtf8() + UserBase->userDataForSending(authorizedUsers[userFullNameSocket], onlineUsersIds) ); // продолжить чтобы отправлялись еще и чаты в которых есть пользователь! на данный момент отправляются тольок имя пользовтелей на серевере но не чаты
+    userFullNameSocket->write(fullNameIdentifier.toUtf8() + UserBase->userDataForSending(authorizedUsers[userFullNameSocket], onlineUsersIds) );
     userFullNameSocket->flush();
 }
 
@@ -217,7 +280,7 @@ void Server::sendUserStatus(int userId)
     QString userSatatus = "STAT|" + QString::number(userId) +"|"+onlineUsersIds[userId];
     for(auto socketIter = authorizedUsers.begin(); socketIter != authorizedUsers.end(); ++socketIter)
     {
-        QTcpSocket* userSocket = socketIter.key();
+        QSslSocket* userSocket = socketIter.key();
         int id = socketIter.value();
         if(id == userId)
             continue;
@@ -229,7 +292,7 @@ void Server::sendUserStatus(int userId)
 
 
 
-void Server::sendChatData(QTcpSocket* userSocketForChatHistory, QByteArray chatData)
+void Server::sendChatData(QSslSocket* userSocketForChatHistory, QByteArray chatData)
 {
     QString allMessages = "CHAT|";
     userSocketForChatHistory->write(allMessages.toUtf8() + chatData);

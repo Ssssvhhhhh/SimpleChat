@@ -4,14 +4,14 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , userSocket(new QTcpSocket(this))
+    , userSocket(new QSslSocket(this))
 {
     ui->setupUi(this);
     //userSocket->connectToHost("127.0.0.1", 1234);
 
-    connect(userSocket, &QTcpSocket::readyRead, this, &MainWindow::readServerResponse);
+    connect(userSocket, &QSslSocket::readyRead, this, &MainWindow::readServerResponse);
     //!userSocket->waitForConnected(3000) ? qDebug() << "[CLIENT] " << "Connection error": qDebug() << "[CLIENT] " << "Connection Succses";
-    connect(userSocket, &QTcpSocket::connected, this, &MainWindow::showConnectionLabel);
+    connect(userSocket, &QSslSocket::connected, this, &MainWindow::showConnectionLabel);
 
     ui->labelError->hide();
     ui->labelError_2->hide();
@@ -27,6 +27,24 @@ MainWindow::MainWindow(QWidget *parent)
 
     setWindowTitle("Simple Chat");
     setWindowIcon(QIcon("images/appIcon.png"));
+
+
+
+
+
+    connect(userSocket, &QSslSocket::connected, this, [](){
+        qDebug() << "TCP connected";
+    });
+
+    connect(userSocket, &QSslSocket::encrypted, this, [](){
+        qDebug() << "SSL handshake success";
+    });
+
+    connect(userSocket, &QSslSocket::readyRead,
+            this, &MainWindow::readServerResponse);
+
+    userSocket->setPeerVerifyMode(QSslSocket::VerifyNone);
+    userSocket->ignoreSslErrors();
 
 }
 
@@ -154,6 +172,7 @@ void MainWindow::sendAuthorizationData()
     {
         QString authorizationData = "AUT|" + login + "|" + password;
         userSocket->write(authorizationData.toUtf8());
+        qDebug() << "[user] data was sent";
         userSocket->flush();
     }
     else
@@ -449,7 +468,7 @@ void MainWindow::on_pushButtonBackToChats_clicked()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     if (userSocket) {
-        connect(userSocket, &QTcpSocket::disconnected, userSocket, &QObject::deleteLater);
+        connect(userSocket, &QSslSocket::disconnected, userSocket, &QObject::deleteLater);
         userSocket->disconnectFromHost();
     }
     event->accept();

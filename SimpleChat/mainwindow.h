@@ -8,6 +8,7 @@
 #include <QMessageBox>
 
 #include <QTcpSocket>
+#include <QSslSocket>
 
 #include <QJsonArray>
 #include <QJsonObject>
@@ -73,7 +74,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     bool isTabVisible = true;
-    QTcpSocket* userSocket;
+    QSslSocket* userSocket;
     CustomWidget* serverWidget;
     UserStatusWidget* userWidget;
     QTreeWidgetItem *serverItem ; // подумать о другой реализации (другие сервера)
