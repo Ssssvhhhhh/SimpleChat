@@ -111,6 +111,7 @@ QByteArray UserDataBase::userDataForSending(int userId, QMap<int, QString> onlin
 
 
     QJsonDocument doc(rootObject);
+    qDebug() << doc;
     return doc.toJson();
 }
 

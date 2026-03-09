@@ -8,6 +8,10 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QStringList>
+#include <QSslSocket>
+#include <QSslServer>
+#include <QSslKey>
+#include <QFile>
 
 class Server : public QTcpServer
 {
@@ -16,10 +20,10 @@ public:
     Server(QObject *parent, int port);
     void incomingConnection(qintptr socketDescriptor) override;
     void readClientData();
-    void sendAuthMessage(QTcpSocket* userAutSocket, QString userId, bool isAauthenticated);
-    void sendUserFullName(QTcpSocket* userFullNameSocket); // поменять название сокета
+    void sendAuthMessage(QSslSocket* userAutSocket, QString userId, bool isAauthenticated);
+    void sendUserFullName(QSslSocket* userFullNameSocket); // поменять название сокета
     void sendUserStatus(int userId);
-    void sendChatData(QTcpSocket* userSocketForChatHistory,QByteArray chatData);
+    void sendChatData(QSslSocket* userSocketForChatHistory,QByteArray chatData);
 
     void broadcastPrivateMessage(int senderId, int reciverId, QString message);
     void broadcastGroupMessage(int senderId, int chatId, const QString& text);
@@ -29,10 +33,13 @@ private slots:
     void userDisconected();
 
 private:
-    QSet<QTcpSocket*> userSockets;
-    QMap<QTcpSocket*, int> authorizedUsers;
+    QSet<QSslSocket*> userSockets;
+    QMap<QSslSocket*, int> authorizedUsers;
     QMap<int, QString> onlineUsersIds;
     UserDataBase* UserBase;
+
+    QSslCertificate server_cert;
+    QSslKey server_key;
 
 };
 

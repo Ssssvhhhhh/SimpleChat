@@ -2,7 +2,7 @@
 #define CUSTOMWIDGET_H
 
 #include <QWidget>
-#include <QTcpSocket>
+#include <QSslSocket>
 #include <QMessageBox>
 
 struct serverInformationData
@@ -23,9 +23,9 @@ class CustomWidget : public QWidget
 
 public:
     explicit CustomWidget(QWidget *parent = nullptr);
-    CustomWidget(QWidget *parent, QTcpSocket* mainSocket, QString serverName, QString serverIP, int serverPort);
+    CustomWidget(QWidget *parent, QSslSocket* mainSocket, QString serverName, QString serverIP, int serverPort);
     ~CustomWidget();
-    void connectToCurrentServer(QTcpSocket* userSocket);
+    void connectToCurrentServer(QSslSocket* userSocket);
 
 
 private slots:
@@ -34,7 +34,7 @@ private slots:
 private:
     Ui::CustomWidget *ui;
     serverInformationData serverStruct;
-    QTcpSocket* userSocketFromMain;
+    QSslSocket* userSocketFromMain;
 };
 
 #endif // CUSTOMWIDGET_H

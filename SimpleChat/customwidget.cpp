@@ -1,5 +1,6 @@
 #include "customwidget.h"
 #include "ui_customwidget.h"
+#include <qsslsocket.h>
 
 
 
@@ -9,9 +10,10 @@ CustomWidget::CustomWidget(QWidget *parent)
     , ui(new Ui::CustomWidget)
 {
     ui->setupUi(this);
+
 }
 
-CustomWidget::CustomWidget(QWidget *parent,QTcpSocket* mainSocket, QString serverName, QString serverIP, int serverPort)
+CustomWidget::CustomWidget(QWidget *parent,QSslSocket* mainSocket, QString serverName, QString serverIP, int serverPort)
     : QWidget(parent), ui(new Ui::CustomWidget)
 {
     ui->setupUi(this);
@@ -21,18 +23,18 @@ CustomWidget::CustomWidget(QWidget *parent,QTcpSocket* mainSocket, QString serve
     serverStruct.serverPortS = serverPort;
 
     userSocketFromMain = mainSocket;
+
 }
 
-void CustomWidget::connectToCurrentServer(QTcpSocket* userSocket)
+void CustomWidget::connectToCurrentServer(QSslSocket* userSocket)
 {
     if(userSocket->state() == QAbstractSocket::ConnectedState)
     {
-        userSocket->disconnect();
+        userSocket->disconnectFromHost();
     }
     else
     {
-        userSocket->connectToHost(serverStruct.serverIPS, serverStruct.serverPortS);
-
+        userSocket->connectToHostEncrypted(serverStruct.serverIPS, serverStruct.serverPortS);
     }
     /*
     if(!userSocket->waitForConnected(1500))
