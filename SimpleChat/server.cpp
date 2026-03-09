@@ -96,10 +96,11 @@ void Server::readClientData()
         {
             QString userId = UserBase->getUserId(splitetedUserData[1]);
 
-            sendAuthMessage(userSenderSocket, userId, true);
             authorizedUsers[userSenderSocket] = userId.toInt();
             onlineUsersIds[userId.toInt()] = "online";
-            //sendUserFullName(userSenderSocket);
+            sendAuthMessage(userSenderSocket, userId, true);
+
+            //sendUserFullName(userSenderSocket); // Remove useless method
             //sendUserStatus(userId.toInt());
         }
         else
@@ -227,7 +228,7 @@ void Server::broadcastNewGroupChat(int chatId, const QString &chatName, const QL
     }
 }
 
-void Server::sendAuthMessage(QSslSocket* userAutSocket,QString userId, bool isAauthenticated)
+void Server::sendAuthMessage(QSslSocket* userAutSocket, QString userId, bool isAauthenticated)
 {
     QString autMessage = "AUT|";
 
@@ -256,7 +257,7 @@ void Server::sendAuthMessage(QSslSocket* userAutSocket,QString userId, bool isAa
         //QString fullNameIdentifier = "|FullName|";
         userAutSocket->write(autMessage.toUtf8() + UserBase->userDataForSending(authorizedUsers[userAutSocket], onlineUsersIds));
         userAutSocket->flush();
-        sendUserFullName(userAutSocket);
+        //sendUserFullName(userAutSocket);
     }
     else
     {
