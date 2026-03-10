@@ -411,7 +411,38 @@ void MainWindow::showConnectionLabel()
     //ui->labelError_4->setText("ERROR");
 }
 
+void MainWindow::sendMediaFile()
+{
+    QString fileName = QFileDialog::getOpenFileName(nullptr);
+    qDebug() << "[Client] selected filename: " << fileName;
+    if(fileName.isEmpty())
+    {
+        qDebug() << "[Client] file not selected";
+    }
 
+    QFile file(fileName);
+    if(!file.open(QIODevice::ReadOnly)) qDebug() << "[Client] file not open "; return;
+
+    qint64 fileSize = file.size();
+    QByteArray header = QByteArray::number(fileSize) + '\n';
+
+    QString message = "FILE|";
+    userSocket->write(message.toUtf8() + header);
+    qDebug() << message + header;
+
+    const qint64 chunkSize = 64 * 1024;
+
+    while(!file.atEnd())
+    {
+        QByteArray chunk = file.read(chunkSize);
+        qDebug() << chunk;
+        userSocket->write(chunk);
+        userSocket->flush();
+    }
+
+    file.close();
+
+}
 
 void MainWindow::on_pushButtonOpenCloseTab_clicked()
 {
@@ -491,5 +522,11 @@ void MainWindow::on_pushButtonSignUp_clicked()
 void MainWindow::on_pushButtonBck_clicked()
 {
     ui->stackedWidget->setCurrentIndex(1);
+}
+
+
+void MainWindow::on_pushButtonMediaSend_clicked()
+{
+    sendMediaFile();
 }
 

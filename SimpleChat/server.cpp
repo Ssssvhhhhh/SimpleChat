@@ -168,6 +168,10 @@ void Server::readClientData()
 
         UserBase->addUserInDataBase(data);
     }
+    if(userMessage.startsWith("FILE"))
+    {
+
+    }
 }
 
 

@@ -17,6 +17,7 @@
 #include <QStandardItemModel>
 #include <QCloseEvent>
 #include <QTimer>
+#include <QFileDialog>
 
 #include <qtreewidget.h>
 
@@ -56,6 +57,8 @@ public:
     void sendRegistrationData();
     void labelError(QLabel* errorLabel);
     void showConnectionLabel();
+    void sendMediaFile();
+
 private slots:
     void on_pushButtonOpenCloseTab_clicked();
     void on_pushButtonAddServer_clicked();
@@ -70,6 +73,7 @@ private slots:
     void on_pushButtonReg_clicked();
     void on_pushButtonSignUp_clicked();
     void on_pushButtonBck_clicked();
+    void on_pushButtonMediaSend_clicked();
 
 private:
     Ui::MainWindow *ui;
