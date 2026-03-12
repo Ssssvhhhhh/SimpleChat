@@ -170,7 +170,7 @@ void MainWindow::sendAuthorizationData()
 
     if(!login.isEmpty() && !password.isEmpty())
     {
-        QString authorizationData = "AUT|" + login + "|" + password;
+        QString authorizationData = "AUT|" + login + "|" + password + '\n';
         userSocket->write(authorizationData.toUtf8());
         qDebug() << "[user] data was sent";
         userSocket->flush();
@@ -234,7 +234,7 @@ void MainWindow::addUserFullNameInTab(const QString& usersFullName)
 void MainWindow::sendMessageToCurrentUser()
 {
     QString message = ui->lineEditMessage->text();
-    QString fullMessage = "MSG|" +  currentChatType +"|"+ QString::number(userId) + "|" + QString::number(currentChatOrUserId) + "|" + message;
+    QString fullMessage = "MSG|" +  currentChatType +"|"+ QString::number(userId) + "|" + QString::number(currentChatOrUserId) + "|" + message + '\n';
     userSocket->write(fullMessage.toUtf8());
     userSocket->flush();
     ui->textBrowserChat->append(usersNamesAndId[userId] + ":" + message);
@@ -260,7 +260,7 @@ void MainWindow::onUserNameRecevied(int id, QString type)
 
 void MainWindow::getAllMessagesInGroupChat(int chatId)
 {
-    QString groupMessagesRequest = "GCHAT|" + QString::number(chatId);
+    QString groupMessagesRequest = "GCHAT|" + QString::number(chatId) + '\n';
     userSocket->write(groupMessagesRequest.toUtf8());
     userSocket->flush();
 }
@@ -269,7 +269,7 @@ void MainWindow::getAllMessagesInGroupChat(int chatId)
 
 void MainWindow::getAllMessagesInChat(int senderId, int reciverId)
 {
-    QString usersIds = "CHAT|"+QString::number(senderId) + "|" + QString::number(reciverId);
+    QString usersIds = "CHAT|"+QString::number(senderId) + "|" + QString::number(reciverId) + '\n';
     userSocket->write(usersIds.toUtf8());
     userSocket->flush();
 }
@@ -323,7 +323,7 @@ void MainWindow::sendDataToCreateGroupChat(QList<int> usersIdsForGroup)
             GroupRequest.append("&");
             GroupRequest.append(QString::number(groupIter));
         }
-        userSocket->write(GroupRequest.toUtf8());
+        userSocket->write(GroupRequest.toUtf8() + '\n');
         userSocket->flush();
     }
     else
@@ -386,7 +386,7 @@ void MainWindow::sendRegistrationData()
 
     if(!name.isEmpty() && !sername.isEmpty() && !login.isEmpty() && !password.isEmpty() && !email.isEmpty())
     {
-        QString registrationMessage = "REG|" + name + "|" + sername + "|" + login + "|"+ password + "|" + email;
+        QString registrationMessage = "REG|" + name + "|" + sername + "|" + login + "|"+ password + "|" + email + '\n';
         userSocket->write(registrationMessage.toUtf8());
         userSocket->flush();
     }
@@ -414,35 +414,26 @@ void MainWindow::showConnectionLabel()
 void MainWindow::sendMediaFile()
 {
     QString fileName = QFileDialog::getOpenFileName(nullptr);
-    qDebug() << "[Client] selected filename: " << fileName;
-    if(fileName.isEmpty())
-    {
-        qDebug() << "[Client] file not selected";
-    }
+    if(fileName.isEmpty()) return;
 
     QFile file(fileName);
-    if(!file.open(QIODevice::ReadOnly)) qDebug() << "[Client] file not open "; return;
+    if(!file.open(QIODevice::ReadOnly)) return;
 
     qint64 fileSize = file.size();
-    QByteArray header = QByteArray::number(fileSize) + '\n';
-
-    QString message = "FILE|";
-    userSocket->write(message.toUtf8() + header);
-    qDebug() << message + header;
+    QByteArray header = "FILE|" + QByteArray::number(fileSize) + "\n";
+    userSocket->write(header);
 
     const qint64 chunkSize = 64 * 1024;
-
     while(!file.atEnd())
     {
         QByteArray chunk = file.read(chunkSize);
-        qDebug() << chunk;
         userSocket->write(chunk);
-        userSocket->flush();
+        //userSocket->flush();
     }
 
     file.close();
-
 }
+
 
 void MainWindow::on_pushButtonOpenCloseTab_clicked()
 {

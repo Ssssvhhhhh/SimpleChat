@@ -41,6 +41,11 @@ private:
     QSslCertificate server_cert;
     QSslKey server_key;
 
+    bool receivingFile = false;
+    qint64 expectedFileSize = 0;
+    qint64 receivedFileSize = 0;
+    QFile outputFile;
+    QByteArray buffer;
 };
 
 #endif // SERVER_H
