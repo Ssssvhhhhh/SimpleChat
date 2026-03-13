@@ -80,70 +80,121 @@ void MainWindow::openCloseServerUsers()
     //ui->stackedWidgetTab->setCurrentIndex(1);
 }
 */
+
 void MainWindow::readServerResponse()
 {
-    QByteArray responseServerData = userSocket->readAll();
-    QString messageFromServer = QString::fromUtf8(responseServerData);
-    qDebug() << "[Client] " << "message from server " << messageFromServer;
-    if(messageFromServer.startsWith("AUT"))
-    {
-        QStringList splitedDataFromServer = messageFromServer.split("|");
-        if(splitedDataFromServer[1] == "Success")
-        {
-            ui->stackedWidget->setCurrentIndex(2);
-            ui->pushButtonCreateGroup->show();
-            userId = splitedDataFromServer[2].toInt();
-            isAuthorized = true;
-            addUserFullNameInTab(splitedDataFromServer[4]);
+    //QByteArray responseServerData = userSocket->readAll();
+    //QString messageFromServer = QString::fromUtf8(responseServerData);
+    //qDebug() << "[Client] " << "message from server " << messageFromServer;
 
-            qDebug() << "[Client] " << "user id" << userId;
+
+    buffer.append(userSocket->readAll());
+    while(true)
+    {
+        if(receivingFile)
+        {
+            qint64 bytesNeeded = expectedFileSize - receivedFileSize;
+
+            if(buffer.size() < bytesNeeded)
+            {
+                outputFile.write(buffer);
+                receivingFile += buffer.size();
+                buffer.clear();
+                return;
+            }
+            QByteArray filePart = buffer.left(bytesNeeded);
+            outputFile.write(filePart);
+
+            buffer.remove(0, bytesNeeded);
+            outputFile.close();
+            receivedFileSize = false;
+
+            qDebug() << "[Client] file received";
+        }
+        else
+        {
+            int index = buffer.indexOf('\t');
+            //qDebug() << "[Client] " << buffer;
+            if(index == -1) return;
+
+            QByteArray header = buffer.left(index);
+            buffer.remove(0, index + 1);
+
+            QString messageFromServer = QString::fromUtf8(header);
+            qDebug () << "[Clinet] message from server " << messageFromServer;
+
+            if(messageFromServer.startsWith("FILE"))
+            {
+                QStringList parts = messageFromServer.split("|");
+                expectedFileSize = parts[1].toLongLong();
+
+                receivedFileSize = 0;
+
+                outputFile.setFileName("received_file_from_server");
+                outputFile.open(QIODevice::WriteOnly);
+
+                receivingFile = true;
+            }
+
+            else if(messageFromServer.startsWith("AUT"))
+            {
+                QStringList splitedDataFromServer = messageFromServer.split("|");
+                if(splitedDataFromServer[1] == "Success")
+                {
+                    ui->stackedWidget->setCurrentIndex(2);
+                    ui->pushButtonCreateGroup->show();
+                    userId = splitedDataFromServer[2].toInt();
+                    isAuthorized = true;
+                    addUserFullNameInTab(splitedDataFromServer[4]);
+
+                    qDebug() << "[Client] " << "user id" << userId;
+                }
+            }
+            else if(messageFromServer.startsWith("MSG"))
+            {
+                QStringList splitedMessageFromServer = messageFromServer.split("|");
+                if(currentChatOrUserId == splitedMessageFromServer[1].toInt())
+                {
+                    ui->textBrowserChat->append(usersNamesAndId[splitedMessageFromServer[1].toInt()] + ":" + splitedMessageFromServer[2]);
+                }
+            }
+            else if(messageFromServer.startsWith("GMSG"))
+            {
+                QStringList splitedGroupMessageFromServer = messageFromServer.split("|");
+                if(currentChatOrUserId == splitedGroupMessageFromServer[2].toInt())
+                {
+                    ui->textBrowserChat->append(usersNamesAndId[splitedGroupMessageFromServer[1].toInt()] + ":" + splitedGroupMessageFromServer[3]);
+                }
+            }
+            else if(messageFromServer.startsWith("GCHAT"))
+            {
+                QStringList splitedGroupMessagesFromServer = messageFromServer.split("|");
+                loadGroupChatMessages(splitedGroupMessagesFromServer[1]);
+            }
+            else if(messageFromServer.startsWith("CHAT"))
+            {
+                QStringList splitedChatMessages = messageFromServer.split("|");
+                loadChatMessages(splitedChatMessages[1]);
+            }
+
+            else if(messageFromServer.startsWith("CREATE"))
+            {
+                QStringList splitedGroupData = messageFromServer.split("|");
+                QTreeWidgetItem* groupNameItem = new QTreeWidgetItem(serverItem);
+                userWidget = new UserStatusWidget(nullptr, splitedGroupData[1], splitedGroupData[2].toInt(), "group", "");
+                ui->treeWidget->setItemWidget(groupNameItem,0,userWidget);
+                connect(userWidget, &UserStatusWidget::userNameClicked, this, &MainWindow::onUserNameRecevied);
+            }
+            else if(messageFromServer.startsWith("STAT"))
+            {
+                QStringList splitedStatusData = messageFromServer.split("|");
+                int id = splitedStatusData[1].toInt();
+                QString status = splitedStatusData[2];
+                changeUserStatus(id, status);
+            }
         }
     }
-    if(messageFromServer.startsWith("MSG"))
-    {
-        QStringList splitedMessageFromServer = messageFromServer.split("|");
-        if(currentChatOrUserId == splitedMessageFromServer[1].toInt())
-        {
-            ui->textBrowserChat->append(usersNamesAndId[splitedMessageFromServer[1].toInt()] + ":" + splitedMessageFromServer[2]);
-        }
-    }
-    if(messageFromServer.startsWith("GMSG"))
-    {
-        QStringList splitedGroupMessageFromServer = messageFromServer.split("|");
-        if(currentChatOrUserId == splitedGroupMessageFromServer[2].toInt())
-        {
-            ui->textBrowserChat->append(usersNamesAndId[splitedGroupMessageFromServer[1].toInt()] + ":" + splitedGroupMessageFromServer[3]);
-        }
-    }
-    if(messageFromServer.startsWith("GCHAT"))
-    {
-        QStringList splitedGroupMessagesFromServer = messageFromServer.split("|");
-        loadGroupChatMessages(splitedGroupMessagesFromServer[1]);
-    }
-    if(messageFromServer.startsWith("CHAT"))
-    {
-        QStringList splitedChatMessages = messageFromServer.split("|");
-        loadChatMessages(splitedChatMessages[1]);
-    }
-
-    if(messageFromServer.startsWith("CREATE"))
-    {
-        QStringList splitedGroupData = messageFromServer.split("|");
-        QTreeWidgetItem* groupNameItem = new QTreeWidgetItem(serverItem);
-        userWidget = new UserStatusWidget(nullptr, splitedGroupData[1], splitedGroupData[2].toInt(), "group", "");
-        ui->treeWidget->setItemWidget(groupNameItem,0,userWidget);
-        connect(userWidget, &UserStatusWidget::userNameClicked, this, &MainWindow::onUserNameRecevied);
-    }
-    if(messageFromServer.startsWith("STAT"))
-    {
-        QStringList splitedStatusData = messageFromServer.split("|");
-        int id = splitedStatusData[1].toInt();
-        QString status = splitedStatusData[2];
-        changeUserStatus(id, status);
-    }
-
 }
-
 
 void MainWindow::addServer()
 {

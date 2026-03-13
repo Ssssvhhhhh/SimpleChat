@@ -28,7 +28,7 @@ public:
     void broadcastPrivateMessage(int senderId, int reciverId, QString message);
     void broadcastGroupMessage(int senderId, int chatId, const QString& text);
     void broadcastNewGroupChat(int chatId, const QString& chatName, const QList<int>& userIds);
-
+    void broadcastFile(QSslSocket* userFileSocket); // fix name to "Send"
 private slots:
     void userDisconected();
 

@@ -105,6 +105,7 @@ void Server::readClientData()
             receivingFile = false;
 
             qDebug() << "File received!";
+            if(!receivingFile) broadcastFile(userSenderSocket);
         }
         else
         {
@@ -183,7 +184,7 @@ void Server::readClientData()
             {
                 QStringList chatIdSplitedData = userMessage.split("|");
                 QString messages = "GCHAT|";
-                userSenderSocket->write(messages.toUtf8() + UserBase->getGroupMessages(chatIdSplitedData[1].toInt()));
+                userSenderSocket->write(messages.toUtf8() + UserBase->getGroupMessages(chatIdSplitedData[1].toInt()) + '\t');
                 userSenderSocket->flush();
             }
             else if(userMessage.startsWith("CREATE"))
@@ -231,7 +232,7 @@ void Server::broadcastPrivateMessage(int senderId, int reciverId,QString message
         if(userId != reciverId)
             continue;
 
-        socket->write(fullMessage.toUtf8());
+        socket->write(fullMessage.toUtf8() + '\t');
         socket->flush();
         break;
     }
@@ -254,7 +255,7 @@ void Server::broadcastGroupMessage(int senderId, int chatId, const QString &text
 
 
         QString message = "GMSG|" + QString::number(senderId) + "|"+ QString::number(chatId)+ "|"+ text;
-        socket->write(message.toUtf8());
+        socket->write(message.toUtf8()+ '\t');
         socket->flush();
     }
 }
@@ -271,9 +272,29 @@ void Server::broadcastNewGroupChat(int chatId, const QString &chatName, const QL
         if(!userIds.contains(userId))
             continue;
 
-        socket->write(message.toUtf8());
+        socket->write(message.toUtf8()+ '\t');
         socket->flush();
     }
+}
+
+void Server::broadcastFile(QSslSocket *userFileSocket)
+{
+    QString filename = "received_file";
+    QFile file(filename);
+    if(!file.open(QIODevice::ReadOnly)) return;
+
+    qint64 fileSize = file.size();
+    QByteArray header = "FILE|" + QByteArray::number(fileSize) + '\t';
+    userFileSocket->write(header);
+
+    const qint64 chunkSize = 64 * 1024;
+    while(!file.atEnd())
+    {
+        QByteArray chunk = file.read(chunkSize);
+        userFileSocket->write(chunk);
+    }
+
+    file.close();
 }
 
 void Server::sendAuthMessage(QSslSocket* userAutSocket, QString userId, bool isAauthenticated)
@@ -303,14 +324,14 @@ void Server::sendAuthMessage(QSslSocket* userAutSocket, QString userId, bool isA
     {
         autMessage += "Success|" + userId + "|FullName|";
         //QString fullNameIdentifier = "|FullName|";
-        userAutSocket->write(autMessage.toUtf8() + UserBase->userDataForSending(authorizedUsers[userAutSocket], onlineUsersIds));
+        userAutSocket->write(autMessage.toUtf8() + UserBase->userDataForSending(authorizedUsers[userAutSocket], onlineUsersIds)+ '\t');
         userAutSocket->flush();
         //sendUserFullName(userAutSocket);
     }
     else
     {
         autMessage+="Error";
-        userAutSocket->write(autMessage.toUtf8());
+        userAutSocket->write(autMessage.toUtf8()+ '\t');
         userAutSocket->flush();
     }
 
@@ -320,7 +341,7 @@ void Server::sendAuthMessage(QSslSocket* userAutSocket, QString userId, bool isA
 void Server::sendUserFullName(QSslSocket* userFullNameSocket)
 {
     QString fullNameIdentifier = "|FullName|";
-    userFullNameSocket->write(fullNameIdentifier.toUtf8() + UserBase->userDataForSending(authorizedUsers[userFullNameSocket], onlineUsersIds) );
+    userFullNameSocket->write(fullNameIdentifier.toUtf8() + UserBase->userDataForSending(authorizedUsers[userFullNameSocket], onlineUsersIds) + '\t');
     userFullNameSocket->flush();
 }
 
@@ -334,7 +355,7 @@ void Server::sendUserStatus(int userId)
         if(id == userId)
             continue;
 
-        userSocket->write(userSatatus.toUtf8());
+        userSocket->write(userSatatus.toUtf8()+ '\t');
         userSocket->flush();
     }
 }
@@ -344,7 +365,7 @@ void Server::sendUserStatus(int userId)
 void Server::sendChatData(QSslSocket* userSocketForChatHistory, QByteArray chatData)
 {
     QString allMessages = "CHAT|";
-    userSocketForChatHistory->write(allMessages.toUtf8() + chatData);
+    userSocketForChatHistory->write(allMessages.toUtf8() + chatData+ '\t');
     userSocketForChatHistory->flush();
 }
 
