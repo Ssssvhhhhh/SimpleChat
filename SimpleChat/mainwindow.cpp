@@ -98,7 +98,7 @@ void MainWindow::readServerResponse()
             if(buffer.size() < bytesNeeded)
             {
                 outputFile.write(buffer);
-                receivingFile += buffer.size();
+                receivedFileSize += buffer.size();
                 buffer.clear();
                 return;
             }
@@ -107,9 +107,8 @@ void MainWindow::readServerResponse()
 
             buffer.remove(0, bytesNeeded);
             outputFile.close();
-            receivedFileSize = false;
-
-            qDebug() << "[Client] file received";
+            receivingFile = false;
+            receivedFileSize = 0;
         }
         else
         {
@@ -479,7 +478,7 @@ void MainWindow::sendMediaFile()
     {
         QByteArray chunk = file.read(chunkSize);
         userSocket->write(chunk);
-        //userSocket->flush();
+        userSocket->flush();
     }
 
     file.close();

@@ -292,6 +292,7 @@ void Server::broadcastFile(QSslSocket *userFileSocket)
     {
         QByteArray chunk = file.read(chunkSize);
         userFileSocket->write(chunk);
+        userFileSocket->flush();
     }
 
     file.close();
