@@ -105,7 +105,7 @@ void Server::readClientData()
             receivingFile = false;
 
             qDebug() << "File received!";
-            if(!receivingFile) broadcastFile(userSenderSocket);
+            if(!receivingFile) sendFile(userSenderSocket, receivedFileName, authorizedUsers[userSenderSocket]);
         }
         else
         {
@@ -123,8 +123,8 @@ void Server::readClientData()
                 expectedFileSize = parts[1].toLongLong();
 
                 receivedFileSize = 0;
-
-                outputFile.setFileName("received_file");
+                receivedFileName = parts[2];
+                outputFile.setFileName(receivedFileName);
                 outputFile.open(QIODevice::WriteOnly);
 
                 receivingFile = true;
@@ -277,14 +277,14 @@ void Server::broadcastNewGroupChat(int chatId, const QString &chatName, const QL
     }
 }
 
-void Server::broadcastFile(QSslSocket *userFileSocket)
+void Server::sendFile(QSslSocket *userFileSocket, const QString &filename, int senderId )
 {
-    QString filename = "received_file";
+    //QString filename = "received_file";
     QFile file(filename);
     if(!file.open(QIODevice::ReadOnly)) return;
 
     qint64 fileSize = file.size();
-    QByteArray header = "FILE|" + QByteArray::number(fileSize) + '\t';
+    QByteArray header = "FILE|" + QByteArray::number(fileSize) +"|" +filename.toUtf8() + "|" + QString::number(senderId).toUtf8() +'\t';
     userFileSocket->write(header);
 
     const qint64 chunkSize = 64 * 1024;

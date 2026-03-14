@@ -58,6 +58,7 @@ public:
     void labelError(QLabel* errorLabel);
     void showConnectionLabel();
     void sendMediaFile();
+    void showFileInChat(int senderId);
 
 private slots:
     void on_pushButtonOpenCloseTab_clicked();
@@ -91,6 +92,9 @@ private:
     QString currentChatType;
     QList<int> usersIdsForGroup;
 
+    QString receivedFileName;
+
+
 
     //files
     bool receivingFile = false;
@@ -98,6 +102,7 @@ private:
     qint64 receivedFileSize = 0;
     QFile outputFile;
     QByteArray buffer;
+    int senderFileId;
 
 };
 #endif // MAINWINDOW_H

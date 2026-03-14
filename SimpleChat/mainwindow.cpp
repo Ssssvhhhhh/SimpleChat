@@ -109,6 +109,7 @@ void MainWindow::readServerResponse()
             outputFile.close();
             receivingFile = false;
             receivedFileSize = 0;
+            if(!receivingFile) showFileInChat(senderFileId);
         }
         else
         {
@@ -126,12 +127,12 @@ void MainWindow::readServerResponse()
             {
                 QStringList parts = messageFromServer.split("|");
                 expectedFileSize = parts[1].toLongLong();
-
+                receivedFileName = "FromServer"+parts[2]; // delete later
                 receivedFileSize = 0;
 
-                outputFile.setFileName("received_file_from_server");
+                outputFile.setFileName(receivedFileName);
                 outputFile.open(QIODevice::WriteOnly);
-
+                senderFileId = parts[3].toInt();
                 receivingFile = true;
             }
 
@@ -444,8 +445,6 @@ void MainWindow::sendRegistrationData()
     {
         labelError(ui->labelError_2);
     }
-
-
 }
 
 void MainWindow::labelError(QLabel *errorLabel)
@@ -463,14 +462,17 @@ void MainWindow::showConnectionLabel()
 
 void MainWindow::sendMediaFile()
 {
-    QString fileName = QFileDialog::getOpenFileName(nullptr);
-    if(fileName.isEmpty()) return;
+    QString filePath = QFileDialog::getOpenFileName(nullptr);
+    if(filePath.isEmpty()) return;
 
-    QFile file(fileName);
+    QFileInfo fileInfo(filePath);
+    QString fileName = fileInfo.fileName();
+
+    QFile file(filePath);
     if(!file.open(QIODevice::ReadOnly)) return;
 
     qint64 fileSize = file.size();
-    QByteArray header = "FILE|" + QByteArray::number(fileSize) + "\n";
+    QByteArray header = "FILE|" + QByteArray::number(fileSize) +"|" + fileName.toUtf8() + "|" + userId + "\n";
     userSocket->write(header);
 
     const qint64 chunkSize = 64 * 1024;
@@ -482,6 +484,21 @@ void MainWindow::sendMediaFile()
     }
 
     file.close();
+}
+
+void MainWindow::showFileInChat(int senderId)
+{
+    QStringList fileSplitedExtension = receivedFileName.split('.');
+    QString fileExtension = fileSplitedExtension[1];
+    if(fileExtension == "png" || fileExtension == "jpg")
+    {
+        ui->textBrowserChat->append(usersNamesAndId[senderId] + ":");
+        ui->textBrowserChat->append("<img src=\"" + receivedFileName + "\" width = 200>");
+    }
+    else
+    {
+
+    }
 }
 
 

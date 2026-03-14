@@ -28,7 +28,7 @@ public:
     void broadcastPrivateMessage(int senderId, int reciverId, QString message);
     void broadcastGroupMessage(int senderId, int chatId, const QString& text);
     void broadcastNewGroupChat(int chatId, const QString& chatName, const QList<int>& userIds);
-    void broadcastFile(QSslSocket* userFileSocket); // fix name to "Send"
+    void sendFile(QSslSocket* userFileSocket, const QString& filename, int senderId);
 private slots:
     void userDisconected();
 
@@ -46,6 +46,7 @@ private:
     qint64 receivedFileSize = 0;
     QFile outputFile;
     QByteArray buffer;
+    QString receivedFileName;
 };
 
 #endif // SERVER_H
