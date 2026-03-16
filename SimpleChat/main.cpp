@@ -12,11 +12,11 @@ int main(int argc, char *argv[])
 
     MainWindow w;
 
-    //MainWindow w2;
+    MainWindow w2;
     //MainWindow w3;
 
     w.show();
-    //w2.show();
+    w2.show();
     //w3.show();
     return a.exec();
 }

@@ -92,11 +92,10 @@ private:
     QString currentChatType;
     QList<int> usersIdsForGroup;
 
-    QString receivedFileName;
-
-
 
     //files
+
+    QString receivedFileName;
     bool receivingFile = false;
     qint64 expectedFileSize = 0;
     qint64 receivedFileSize = 0;

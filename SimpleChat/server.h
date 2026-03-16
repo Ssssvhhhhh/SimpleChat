@@ -12,6 +12,9 @@
 #include <QSslServer>
 #include <QSslKey>
 #include <QFile>
+#include <QFileInfo>
+
+
 
 class Server : public QTcpServer
 {
@@ -28,7 +31,7 @@ public:
     void broadcastPrivateMessage(int senderId, int reciverId, QString message);
     void broadcastGroupMessage(int senderId, int chatId, const QString& text);
     void broadcastNewGroupChat(int chatId, const QString& chatName, const QList<int>& userIds);
-    void sendFile(QSslSocket* userFileSocket, const QString& filename, int senderId);
+    void sendFile(const QString& filename, int senderId, int reciverId);
 private slots:
     void userDisconected();
 
@@ -47,6 +50,7 @@ private:
     QFile outputFile;
     QByteArray buffer;
     QString receivedFileName;
+    int reciverFileId; // change later create another method
 };
 
 #endif // SERVER_H

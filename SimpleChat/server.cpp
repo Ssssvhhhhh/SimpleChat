@@ -105,7 +105,7 @@ void Server::readClientData()
             receivingFile = false;
 
             qDebug() << "File received!";
-            if(!receivingFile) sendFile(userSenderSocket, receivedFileName, authorizedUsers[userSenderSocket]);
+            if(!receivingFile) sendFile(receivedFileName, authorizedUsers[userSenderSocket], reciverFileId);
         }
         else
         {
@@ -116,7 +116,7 @@ void Server::readClientData()
             buffer.remove(0, index + 1);
 
             QString userMessage = QString::fromUtf8(header);
-
+            qDebug() << "[Server] message from user " << userMessage;
             if(userMessage.startsWith("FILE"))
             {
                 QStringList parts = userMessage.split("|");
@@ -124,6 +124,8 @@ void Server::readClientData()
 
                 receivedFileSize = 0;
                 receivedFileName = parts[2];
+                reciverFileId = parts[4].toInt();
+                qDebug() << "[Server] reciverFileId" << reciverFileId;
                 outputFile.setFileName(receivedFileName);
                 outputFile.open(QIODevice::WriteOnly);
 
@@ -277,22 +279,44 @@ void Server::broadcastNewGroupChat(int chatId, const QString &chatName, const QL
     }
 }
 
-void Server::sendFile(QSslSocket *userFileSocket, const QString &filename, int senderId )
+void Server::sendFile(const QString &filename, int senderId,  int reciverId)
 {
     //QString filename = "received_file";
     QFile file(filename);
     if(!file.open(QIODevice::ReadOnly)) return;
 
+
+    // create QMap<int, QSslSocket> later
+    QSslSocket* socketReciver = nullptr;
+
+    for(auto it = authorizedUsers.begin(); it != authorizedUsers.end(); ++it)
+    {
+        if(it.value() == reciverId) {
+            socketReciver = it.key(); // fix socket it is not needed userSocket
+            qDebug() << "socket:" << it.key() << "userId:" << it.value();
+
+            break;
+        }
+    }
+
+
+    if(!socketReciver)
+    {
+        qDebug() << "Receiver not found";
+        return;
+    }
+
+
     qint64 fileSize = file.size();
     QByteArray header = "FILE|" + QByteArray::number(fileSize) +"|" +filename.toUtf8() + "|" + QString::number(senderId).toUtf8() +'\t';
-    userFileSocket->write(header);
+    socketReciver->write(header);
 
     const qint64 chunkSize = 64 * 1024;
     while(!file.atEnd())
     {
         QByteArray chunk = file.read(chunkSize);
-        userFileSocket->write(chunk);
-        userFileSocket->flush();
+        socketReciver->write(chunk);
+        socketReciver->flush();
     }
 
     file.close();

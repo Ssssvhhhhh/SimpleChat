@@ -472,7 +472,7 @@ void MainWindow::sendMediaFile()
     if(!file.open(QIODevice::ReadOnly)) return;
 
     qint64 fileSize = file.size();
-    QByteArray header = "FILE|" + QByteArray::number(fileSize) +"|" + fileName.toUtf8() + "|" + userId + "\n";
+    QByteArray header = "FILE|" + QByteArray::number(fileSize) +"|" + fileName.toUtf8() + "|" + QByteArray::number(userId) +"|" + QByteArray::number(currentChatOrUserId) +"\n";
     userSocket->write(header);
 
     const qint64 chunkSize = 64 * 1024;
@@ -484,6 +484,9 @@ void MainWindow::sendMediaFile()
     }
 
     file.close();
+
+    ui->textBrowserChat->append("<img src=\"" + filePath + "\" width = 200>");
+
 }
 
 void MainWindow::showFileInChat(int senderId)
