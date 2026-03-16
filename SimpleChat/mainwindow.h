@@ -21,6 +21,9 @@
 
 #include <qtreewidget.h>
 
+#include <QDesktopServices>
+#include <QUrl>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -59,7 +62,7 @@ public:
     void showConnectionLabel();
     void sendMediaFile();
     void showFileInChat(int senderId);
-
+    void openFileFromChat(const QUrl& url);
 private slots:
     void on_pushButtonOpenCloseTab_clicked();
     void on_pushButtonAddServer_clicked();

@@ -24,13 +24,15 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableWidgetGroup->setColumnCount(1);
     ui->tableWidgetGroup->horizontalHeader()->hide();
     ui->treeWidget->setFocusPolicy(Qt::NoFocus);
+    ui->textBrowserChat->setOpenLinks(false);
+
 
     setWindowTitle("Simple Chat");
     setWindowIcon(QIcon("images/appIcon.png"));
 
 
 
-
+    connect(ui->textBrowserChat, &QTextBrowser::anchorClicked, this, &MainWindow::openFileFromChat);
 
     connect(userSocket, &QSslSocket::connected, this, [](){
         qDebug() << "TCP connected";
@@ -485,7 +487,9 @@ void MainWindow::sendMediaFile()
 
     file.close();
 
-    ui->textBrowserChat->append("<img src=\"" + filePath + "\" width = 200>");
+    //ui->textBrowserChat->append("<img src=\"" + filePath + "\" width = 200>");
+    ui->textBrowserChat->append(usersNamesAndId[userId] + ":" + "<a href=\"" + fileName + "\">" + QFileInfo(filePath).fileName() +"</a>");
+
 
 }
 
@@ -493,15 +497,28 @@ void MainWindow::showFileInChat(int senderId)
 {
     QStringList fileSplitedExtension = receivedFileName.split('.');
     QString fileExtension = fileSplitedExtension[1];
-    if(fileExtension == "png" || fileExtension == "jpg")
+    if(fileExtension == "png" || fileExtension == "jpg" || fileExtension == "jpeg")
     {
         ui->textBrowserChat->append(usersNamesAndId[senderId] + ":");
         ui->textBrowserChat->append("<img src=\"" + receivedFileName + "\" width = 200>");
     }
+    /* else if(fileExtension == "mp4")
+    {
+        ui->textBrowserChat->append(usersNamesAndId[senderId] + ":");
+
+        QString html = receivedFileName ;
+        ui->textBrowserChat->append(html);
+    }
+    */
     else
     {
-
+        ui->textBrowserChat->append(usersNamesAndId[senderId] + ":" + "<a href=\"" + receivedFileName + "\">" + QFileInfo(receivedFileName).fileName() +"</a>");
     }
+}
+
+void MainWindow::openFileFromChat(const QUrl &url)
+{
+    QDesktopServices::openUrl(QUrl::fromLocalFile(url.toString()));
 }
 
 
