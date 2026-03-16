@@ -148,7 +148,7 @@ void Server::readClientData()
                     sendAuthMessage(userSenderSocket, userId, true);
 
                     //sendUserFullName(userSenderSocket); // Remove useless method
-                    //sendUserStatus(userId.toInt());
+                    sendUserStatus(userId.toInt());
                 }
                 else
                 {

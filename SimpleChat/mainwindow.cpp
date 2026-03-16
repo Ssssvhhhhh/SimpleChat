@@ -487,8 +487,19 @@ void MainWindow::sendMediaFile()
 
     file.close();
 
-    //ui->textBrowserChat->append("<img src=\"" + filePath + "\" width = 200>");
-    ui->textBrowserChat->append(usersNamesAndId[userId] + ":" + "<a href=\"" + fileName + "\">" + QFileInfo(filePath).fileName() +"</a>");
+    // think about how to improve the display
+
+    QStringList fileExtensionParts = fileName.split(".");
+    QString fileExtension = fileExtensionParts[1];
+    if(fileExtension == "png" || fileExtension == "jpg" || fileExtension == "jpeg")
+    {
+        ui->textBrowserChat->append("<img src=\"" + filePath + "\" width = 200>");
+    }
+    else
+    {
+        ui->textBrowserChat->append(usersNamesAndId[userId] + ":" + "<a href=\"" + fileName + "\">" + QFileInfo(filePath).fileName() +"</a>");
+
+    }
 
 
 }
