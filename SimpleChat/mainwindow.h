@@ -17,8 +17,12 @@
 #include <QStandardItemModel>
 #include <QCloseEvent>
 #include <QTimer>
+#include <QFileDialog>
 
 #include <qtreewidget.h>
+
+#include <QDesktopServices>
+#include <QUrl>
 
 
 QT_BEGIN_NAMESPACE
@@ -56,6 +60,9 @@ public:
     void sendRegistrationData();
     void labelError(QLabel* errorLabel);
     void showConnectionLabel();
+    void sendMediaFile();
+    void showFileInChat(int senderId);
+    void openFileFromChat(const QUrl& url);
 private slots:
     void on_pushButtonOpenCloseTab_clicked();
     void on_pushButtonAddServer_clicked();
@@ -70,6 +77,7 @@ private slots:
     void on_pushButtonReg_clicked();
     void on_pushButtonSignUp_clicked();
     void on_pushButtonBck_clicked();
+    void on_pushButtonMediaSend_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -87,6 +95,16 @@ private:
     QString currentChatType;
     QList<int> usersIdsForGroup;
 
+
+    //files
+
+    QString receivedFileName;
+    bool receivingFile = false;
+    qint64 expectedFileSize = 0;
+    qint64 receivedFileSize = 0;
+    QFile outputFile;
+    QByteArray buffer;
+    int senderFileId;
 
 };
 #endif // MAINWINDOW_H

@@ -242,7 +242,7 @@ border-radius: 10px;    </string>
           <string notr="true"/>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="pageServerSettings">
           <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -1005,6 +1005,26 @@ padding-left: 10px;  </string>
                </property>
                <property name="icon">
                 <iconset theme="QIcon::ThemeIcon::DocumentSend"/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButtonMediaSend">
+               <property name="minimumSize">
+                <size>
+                 <width>30</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(217, 217, 217);
+</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset theme="QIcon::ThemeIcon::DocumentPageSetup"/>
                </property>
               </widget>
              </item>
