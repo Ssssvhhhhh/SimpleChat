@@ -242,7 +242,7 @@ border-radius: 10px;    </string>
           <string notr="true"/>
          </property>
          <property name="currentIndex">
-          <number>2</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="pageServerSettings">
           <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -1017,14 +1017,13 @@ padding-left: 10px;  </string>
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(217, 217, 217);
+                <string notr="true">
+background-color: rgb(217, 217, 217);
+        qproperty-icon: url(images/paperclip.png);
 </string>
                </property>
                <property name="text">
                 <string/>
-               </property>
-               <property name="icon">
-                <iconset theme="QIcon::ThemeIcon::DocumentPageSetup"/>
                </property>
               </widget>
              </item>
